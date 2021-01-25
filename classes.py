@@ -9,6 +9,7 @@ screenHeight = tile_size * tile_quantity
 
 enemy1 = pygame.image.load('images/enemy1.png')
 
+
 class Jugador:
     def __init__(self,x,y):
         self.cords =Vector2(x,y)
@@ -139,15 +140,15 @@ class Game:
 class Enemigo:
     def __init__(self,x,y):
         self.cords =Vector2(x,y)
-        self.offset=10
+        self.offset=9
         self.position = Vector2(self.cords.x * tile_size  + self.offset,self.cords.y * tile_size + self.offset)
-        self.width= tile_size - 20
-        self.height= tile_size - 20
+        self.width= tile_size - self.offset*2
+        self.height= tile_size - self.offset*2
         self.color =  (255, 101, 68)
         self.vel = tile_size
-        self.health=10
-        self.attack = 1
-        self.defense = 1
+        self.health=5
+        self.attack = 2
+        self.defense = 0
         self.gold=0
         
     def draw(self,SCREEN):

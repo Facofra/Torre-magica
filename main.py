@@ -10,7 +10,7 @@ SCREEN = pygame.Surface([screenWidth,screenHeight])
 pygame.display.set_caption("Test game")
 clock = pygame.time.Clock()
 FPS = 60
-font = pygame.font.SysFont('papyrus',30,True)
+font = pygame.font.SysFont('papyrus',20,True)
 
 
 # SONIDOS
@@ -36,7 +36,7 @@ mapa = [
     [0,0,0,0,0,0,0,0,0,4,0,4],
     [4,0,0,3,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,4,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,5,0,0,0,0],
     [0,0,0,2,0,0,0,0,3,0,0,0],
     [0,0,0,0,0,3,0,0,0,0,0,0],
     [0,0,4,0,0,0,0,0,4,0,0,0],
@@ -155,6 +155,15 @@ def main():
                             jugador.gold += 1
 
                             break
+                    for i in range(len(enemigos)):
+                        if jugador.collides(enemigos[i],"left"):
+                            jugador.health-= enemigos[i].attack - jugador.defense
+                            enemigos[i].health-= jugador.attack - enemigos[i].defense
+                            print(enemigos[i].health)
+                            if enemigos[i].health <=0:
+                                enemigos.pop(i)
+                                break
+                            
                     jugador.move("left")
                     caminarSound.play()
                 # else:
