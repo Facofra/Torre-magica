@@ -115,8 +115,13 @@ class Caja(Block):
 
         if type(objetos) is list:
             for objeto in objetos:
-                if self.cords + tupla == objeto.cords:
-                    return True
+                if type(objeto) is list:
+                    for subObjeto in objeto:
+                        if self.cords + tupla == subObjeto.cords:
+                            return True
+                else:
+                    if self.cords + tupla == objeto.cords:
+                        return True
             return False 
         else:
             return self.cords + tupla == objetos.cords
@@ -149,7 +154,7 @@ class Enemigo:
         self.health=5
         self.attack = 2
         self.defense = 0
-        self.gold=0
+        self.gold=1
         
     def draw(self,SCREEN):
         SCREEN.blit(enemy1,self.position)

@@ -140,99 +140,83 @@ def main():
             movementAvailable=5
             if (keys[pygame.K_LEFT] or keys[pygame.K_a]):
                 # if jugador.facing == "left":
+                direction = "left"
                 dontMove=False
                 for caja in cajas:
-                    if jugador.collides(caja,"left"):
-                        if  ( caja.collides(cajas,"left") or caja.collides(bloques,"left") or caja.position.x < tile_size ):
+                    if jugador.collides(caja,direction):
+                        if  ( caja.collides([bloques,cajas,coins,enemigos],direction) or caja.position.x < tile_size ):
                             dontMove = True
                         else:
-                            caja.move("left")
-                if not (jugador.position.x < tile_size or  jugador.collides(bloques,"left") or dontMove):
-                    for i in range(len(coins)):
-                        if jugador.collides(coins[i],"left"):
-                            coins.pop(i)
-                            coinSound.play()
-                            jugador.gold += 1
-
-                            break
-                    for i in range(len(enemigos)):
-                        if jugador.collides(enemigos[i],"left"):
-                            jugador.health-= enemigos[i].attack - jugador.defense
-                            enemigos[i].health-= jugador.attack - enemigos[i].defense
-                            print(enemigos[i].health)
-                            if enemigos[i].health <=0:
-                                enemigos.pop(i)
-                                break
-                            
-                    jugador.move("left")
+                            caja.move(direction)
+                if not dontMove:
+                    dontMove = enemyCollitions(direction)
+                if not (jugador.position.x < tile_size or  jugador.collides(bloques,direction) or dontMove):
+                    coinCollitions(direction)
+                    jugador.move(direction)
                     caminarSound.play()
                 # else:
                 
-                jugador.facing="left"
+                jugador.facing=direction
                 
             if (keys[pygame.K_RIGHT] or keys[pygame.K_d]):
                 # if jugador.facing=="right":
+                direction = "right"
                 dontMove=False
                 for caja in cajas:
-                    if jugador.collides(caja,"right"):
-                        if  (caja.position.x + caja.width + tile_size  > screenWidth  or  caja.collides(bloques,"right")  or caja.collides(cajas,"right")):
+                    if jugador.collides(caja,direction):
+                        if  (caja.position.x + caja.width + tile_size  > screenWidth  or caja.collides([bloques,cajas,coins,enemigos],direction) ):
                             dontMove=True
                         else:
-                            caja.move("right")
-                if not (jugador.position.x + jugador.width + tile_size  > screenWidth  or  jugador.collides(bloques,"right")  or dontMove): 
-                    for i in range(len(coins)):
-                        if jugador.collides(coins[i],"right"):
-                            coinSound.play()
-                            jugador.gold += 1
-                            coins.pop(i)
-                            break
-                    jugador.move("right")
+                            caja.move(direction)
+                if not dontMove:
+                    dontMove = enemyCollitions(direction)
+                if not (jugador.position.x + jugador.width + tile_size  > screenWidth  or  jugador.collides(bloques,direction)  or dontMove): 
+                    coinCollitions(direction)
+                    jugador.move(direction)
                     caminarSound.play()
 
                 # else:
-                jugador.facing="right"
+                jugador.facing=direction
                 
             if (keys[pygame.K_UP] or keys[pygame.K_w]):
                 # if jugador.facing=="up":
+                direction = "up"
                 dontMove=False
                 for caja in cajas:
-                    if jugador.collides(caja,"up"):
-                        if  (caja.position.y - tile_size < jugador.offset  or  caja.collides(bloques,"up")  or caja.collides(cajas,"up")):
+                    if jugador.collides(caja,direction):
+                        if  (caja.position.y - tile_size < jugador.offset  or  caja.collides([bloques,cajas,coins,enemigos],direction) ):
                             dontMove=True
                         else:
-                            caja.move("up")
-                if not (jugador.position.y - tile_size < jugador.offset  or  jugador.collides(bloques,"up")  or dontMove):
-                    for i in range(len(coins)):
-                        if jugador.collides(coins[i],"up"):
-                            coinSound.play()
-                            jugador.gold += 1
-                            coins.pop(i)
-                            break
-                    jugador.move("up")
+                            caja.move(direction)
+                if not dontMove:
+                    dontMove = enemyCollitions(direction)
+                if not (jugador.position.y - tile_size < jugador.offset  or  jugador.collides(bloques,direction)  or dontMove):
+                    coinCollitions(direction)
+                    jugador.move(direction)
                     caminarSound.play()
                 # else:
-                jugador.facing="up"
+                jugador.facing=direction
                 
             if (keys[pygame.K_DOWN] or keys[pygame.K_s]):
                 # if jugador.facing=="down":
+                direction = "down"
                 dontMove=False
+
                 for caja in cajas:
-                    if jugador.collides(caja,"down"):
-                        if  (caja.position.y + tile_size >= screenHeight or  caja.collides(bloques,"down")  or caja.collides(cajas,"down")):
+                    if jugador.collides(caja,direction):
+                        if  (caja.position.y + tile_size >= screenHeight or  caja.collides([bloques,cajas,coins,enemigos],direction) ):
                             dontMove=True
                         else:
-                            caja.move("down")
-                if not (jugador.position.y + tile_size >= screenHeight or  jugador.collides(bloques,"down")  or dontMove):
-                    for i in range(len(coins)):
-                        if jugador.collides(coins[i],"down"):
-                            coinSound.play()
-                            jugador.gold += 1
-                            coins.pop(i)
-                            break
-                    jugador.move("down")
+                            caja.move(direction)
+
+                if not dontMove:
+                    dontMove = enemyCollitions(direction)
+                if not (jugador.position.y + tile_size >= screenHeight or  jugador.collides(bloques,direction)  or dontMove):
+                    coinCollitions(direction)
+                    jugador.move(direction)
                     caminarSound.play()
                 # else:
-                jugador.facing="down"
+                jugador.facing=direction
         else:
             movementAvailable-=1
 
@@ -241,6 +225,27 @@ def main():
         updateWindow()
 
     pygame.quit()
+
+
+def coinCollitions(direction):
+    for i in range(len(coins)):
+        if jugador.collides(coins[i],direction):
+            coins.pop(i)
+            coinSound.play()
+            jugador.gold += 1
+            return True
+    return False
+def enemyCollitions(direction):
+    for i in range(len(enemigos)):
+        if jugador.collides(enemigos[i],direction):
+            jugador.health-= enemigos[i].attack - jugador.defense
+            enemigos[i].health-= jugador.attack - enemigos[i].defense
+            print(enemigos[i].health)
+            if enemigos[i].health <=0:
+                jugador.gold+= enemigos[i].gold
+                enemigos.pop(i)
+            return True
+    return False
 
 if __name__ == "__main__":
     main()
