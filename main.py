@@ -20,16 +20,12 @@ caminarSound = pygame.mixer.Sound('Sounds/caminar.mp3')
 coinSound = pygame.mixer.Sound('Sounds/coin.mp3')
 
 
-jugador = Jugador(1,1)
+# jugador = Jugador(1,1)
 game = Game()
 
-bloques =[]
-cajas =[]
-coins= []
-enemigos = []
 
-mapa = [
-    [0,0,0,0,0,0,0,0,0,0,0,4],
+nivel1 = [
+    [0,0,0,0,0,0,6,0,0,0,0,4],
     [4,0,0,0,2,2,2,0,0,0,0,0],
     [4,0,0,0,0,0,0,0,0,0,0,0],
     [0,0,4,0,0,0,0,5,0,0,0,0],
@@ -40,33 +36,38 @@ mapa = [
     [0,0,0,2,0,0,0,0,3,0,0,0],
     [0,0,0,0,0,3,0,0,0,0,0,0],
     [0,0,4,0,0,0,0,0,4,0,0,0],
-    [0,0,0,0,3,0,0,0,0,0,0,5]
+    [0,0,0,0,3,0,0,0,1,0,0,5]
+]
+nivel2 = [
+    [0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,5,0,0,0,0,0,0,0],
+    [0,0,0,2,5,2,0,0,0,0,0,0],
+    [0,0,0,2,0,2,0,0,0,0,0,0],
+    [2,2,2,2,0,2,2,0,0,0,0,0],
+    [0,1,0,0,0,0,0,2,0,0,0,0]
 ]
 
-for i in range(len(mapa)):
-    for j in range(len(mapa[i])):
-        if mapa[i][j] == 2:
-            x=j
-            y=i
-            bloques.append(Block(x,y))
-        elif mapa[i][j] == 3:
-            x=j
-            y=i
-            cajas.append(Caja(x,y))
-        elif mapa[i][j] == 4:
-            x=j
-            y=i
-            coins.append(Coin(x,y))
-        elif mapa[i][j] == 5:
-            x=j
-            y=i
-            enemigos.append(Enemigo(x,y))
-        
+game.crearNivel()
+
+bloques =game.bloques
+cajas =game.cajas
+coins= game.coins
+enemigos = game.enemigos
+escaleraAbajo= game.escaleraAbajo
+escaleraArriba = game.escaleraArriba
+jugador=game.jugador
 
 
 
 def main():
-    
+    global bloques, cajas, coins, enemigos, escaleraArriba, escaleraAbajo, jugador
+
     movementAvailable=0
     run = True
     while run:
@@ -123,6 +124,26 @@ def main():
                                 dontMove = True
                             else:
                                 caja.move(direction)
+                    if jugador.collides(escaleraArriba,direction):
+                        dontMove=True
+                        game.subir()
+                        bloques =game.bloques
+                        cajas =game.cajas
+                        coins= game.coins
+                        enemigos = game.enemigos
+                        escaleraAbajo= game.escaleraAbajo
+                        escaleraArriba = game.escaleraArriba
+                        jugador=game.jugador
+                    if jugador.collides(escaleraAbajo,direction):
+                        dontMove=True
+                        game.bajar()
+                        bloques =game.bloques
+                        cajas =game.cajas
+                        coins= game.coins
+                        enemigos = game.enemigos
+                        escaleraAbajo= game.escaleraAbajo
+                        escaleraArriba = game.escaleraArriba
+                        jugador=game.jugador
                     if not dontMove:
                         dontMove = enemyCollitions(direction)
                     if not (jugador.position.x < tile_size or  jugador.collides(bloques,direction) or dontMove):
@@ -143,6 +164,8 @@ def main():
                                 dontMove=True
                             else:
                                 caja.move(direction)
+
+                    
                     if not dontMove:
                         dontMove = enemyCollitions(direction)
                     if not (jugador.position.x + jugador.width + tile_size  > screenWidth  or  jugador.collides(bloques,direction)  or dontMove): 
@@ -239,6 +262,15 @@ def updateWindow():
         for enemigo in enemigos:
             enemigo.draw(SCREEN)
 
+        try:
+            escaleraArriba.draw(SCREEN)
+        except:
+            pass
+        try:
+            escaleraAbajo.draw(SCREEN)
+        except:
+            pass
+        
         jugador.draw(SCREEN)
     else:
         pauseText = font.render('Pause ', 1 , (255,255,255))

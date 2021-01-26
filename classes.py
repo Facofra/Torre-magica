@@ -12,6 +12,104 @@ enemy1 = pygame.image.load('images/enemy1.png')
 class Game:
     def __init__(self):
         self.pause=False
+        self.bloques=[]
+        self.cajas=[]
+        self.coins=[]
+        self.enemigos=[]
+        self.jugador=Jugador(20,20)
+        self.escaleraArriba=None
+        self.escaleraAbajo=None
+        self.nivel = 0
+        self.niveles=[
+[
+    [7,0,0,0,0,0,6,0,0,0,0,4],
+    [4,0,0,0,2,2,2,0,0,0,0,0],
+    [4,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,4,0,0,0,0,5,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,4,0,4],
+    [4,0,0,3,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,4,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,5,0,0,0,0],
+    [0,0,0,2,0,0,0,0,3,0,0,0],
+    [0,0,0,0,0,3,0,0,0,0,0,0],
+    [0,0,4,0,0,0,0,0,4,0,0,0],
+    [0,0,0,0,3,0,0,0,1,0,0,5]
+],
+[
+    [7,0,0,0,0,0,0,0,0,0,6,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,5,0,0,0,0,0,0,0],
+    [0,0,0,2,5,2,0,0,0,0,0,0],
+    [0,0,0,2,0,2,0,0,0,0,0,0],
+    [2,2,2,2,0,2,2,0,0,0,0,0],
+    [0,1,0,0,0,0,0,2,0,0,0,0]
+]
+
+        ]
+
+    def crearNivel(self):
+        nivel = self.niveles[self.nivel]
+        for i in range(len(nivel)):
+            for j in range(len(nivel[i])):
+                if nivel[i][j] == 1:
+                    x=j
+                    y=i
+                    self.jugador.cords =Vector2(x,y)
+                    self.jugador.position =Vector2(x * tile_size  + self.jugador.offset, y * tile_size + self.jugador.offset)
+                if nivel[i][j] == 2:
+                    x=j
+                    y=i
+                    self.bloques.append(Block(x,y))
+                elif nivel[i][j] == 3:
+                    x=j
+                    y=i
+                    self.cajas.append(Caja(x,y))
+                elif nivel[i][j] == 4:
+                    x=j
+                    y=i
+                    self.coins.append(Coin(x,y))
+                elif nivel[i][j] == 5:
+                    x=j
+                    y=i
+                    self.enemigos.append(Enemigo(x,y))
+                elif nivel[i][j] == 6:
+                    x=j
+                    y=i
+                    self.escaleraArriba=Escalera(x,y,"up")
+                elif nivel[i][j] == 7:
+                    x=j
+                    y=i
+                    self.escaleraAbajo=Escalera(x,y,"down")
+
+    def vaciarGameObjects(self):
+        self.bloques=[]
+        self.cajas=[]
+        self.coins=[]
+        self.enemigos=[]
+        self.escaleraArriba=None
+        self.escaleraAbajo=None
+
+    def subir(self):
+        self.nivel+=1
+        self.vaciarGameObjects()
+        self.crearNivel()
+        print("subiste")
+        pass
+
+    def bajar(self):
+        self.nivel-=1
+        self.vaciarGameObjects()
+        self.crearNivel()
+        print("bajaste")
+        pass
+
+    def collition(self):
+        pass
 
 class Jugador:
     def __init__(self,x,y):
@@ -58,6 +156,7 @@ class Jugador:
             return False 
         else:
             return self.cords + tupla == objetos.cords
+
     def move(self,direction):
         if direction == "left":
             self.position.x -= tile_size
@@ -71,21 +170,19 @@ class Jugador:
         elif direction == "down":
             self.position.y += tile_size
             self.cords += (0,1)            
-
-        
+      
 class Block:
     def __init__(self,x,y):
         self.cords =Vector2(x,y)
         self.offset=10
         self.position = Vector2(self.cords.x * tile_size  + self.offset,self.cords.y * tile_size + self.offset)
-        self.width=tile_size - 20
-        self.height=tile_size - 20
+        self.width=tile_size - self.offset*2
+        self.height=tile_size - self.offset*2
         self.color =  ( 203, 203, 225 )
         
 
     def draw(self,SCREEN):
         pygame.draw.rect(SCREEN,self.color, (self.position.x,self.position.y,self.width,self.height) )
-
 
 class Caja(Block):
     def __init__(self,x,y):
@@ -141,8 +238,6 @@ class Coin:
     def draw(self,SCREEN):
         pygame.draw.circle(SCREEN,self.color, self.position, 10 )
 
-
-
 class Enemigo:
     def __init__(self,x,y):
         self.cords =Vector2(x,y)
@@ -159,3 +254,19 @@ class Enemigo:
         
     def draw(self,SCREEN):
         SCREEN.blit(enemy1,self.position)
+
+class Escalera:
+    def __init__(self,x,y,direction):
+        self.cords =Vector2(x,y)
+        self.offset=5
+        self.position = Vector2(self.cords.x * tile_size  + self.offset,self.cords.y * tile_size + self.offset)
+        self.width= tile_size - self.offset*2
+        self.height= tile_size - self.offset*2
+        self.color =  ( 0, 203, 225 )
+        self.direction=direction
+    def draw(self,SCREEN):
+        if self.direction == "up":
+            pygame.draw.rect(SCREEN,self.color, (self.position.x,self.position.y,self.width,self.height) )
+        elif self.direction == "down":
+            pygame.draw.rect(SCREEN,(203,0,222), (self.position.x,self.position.y,self.width,self.height) )
+
