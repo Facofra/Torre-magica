@@ -9,6 +9,9 @@ screenHeight = tile_size * tile_quantity
 
 enemy1 = pygame.image.load('images/enemy1.png')
 
+class Game:
+    def __init__(self):
+        self.pause=False
 
 class Jugador:
     def __init__(self,x,y):
@@ -138,9 +141,7 @@ class Coin:
     def draw(self,SCREEN):
         pygame.draw.circle(SCREEN,self.color, self.position, 10 )
 
-class Game:
-    def __init__(self):
-        self.pause=False
+
 
 class Enemigo:
     def __init__(self,x,y):

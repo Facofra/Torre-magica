@@ -63,37 +63,7 @@ for i in range(len(mapa)):
             enemigos.append(Enemigo(x,y))
         
 
-def updateWindow():
-    WINDOW.fill((0,0,0))
-    WINDOW.blit(SCREEN,(200,0))
 
-    SCREEN.fill((100,0,100))
-    for i in range(1,tile_quantity):
-        pygame.draw.line(SCREEN,(0,0,0),(0,i*50),(screenWidth,i*50))
-        pygame.draw.line(SCREEN,(0,0,0),(i*50,0),(i*50,screenHeight))
-
-    for block in bloques:
-        block.draw(SCREEN)
-    for caja in cajas:
-        caja.draw(SCREEN)
-    for coin in coins:
-        coin.draw(SCREEN)
-    for enemigo in enemigos:
-        enemigo.draw(SCREEN)
-
-    jugador.draw(SCREEN)
-
-# Textos en el costado
-    goldText = font.render('Gold: ' + str(jugador.gold) , 1 , (255,255,255))
-    healthText = font.render('Hp: ' + str(jugador.health) , 1 , (255,255,255))
-    attackText = font.render('Att: ' + str(jugador.attack) , 1 , (255,255,255))
-    defenseText = font.render('Def: ' + str(jugador.defense) , 1 , (255,255,255))
-    WINDOW.blit(goldText,(10,10))
-    WINDOW.blit(healthText,(10,50))
-    WINDOW.blit(attackText,(10,90))
-    WINDOW.blit(defenseText,(10,130))
-
-    pygame.display.update()
 
 def main():
     
@@ -108,7 +78,7 @@ def main():
             
             if event.type == pygame.QUIT:
                 run = False
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            elif event.type == pygame.MOUSEBUTTONDOWN:
                 posicion = pygame.mouse.get_pos()
                 x=posicion[0]-200
                 y=posicion[1]
@@ -123,6 +93,9 @@ def main():
                             cristalSound.play()
                             bloques.pop(i)
                             break
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:
+                    game.pause=not game.pause
 
 
 
@@ -131,97 +104,99 @@ def main():
             print("Juego terminado")
             run = False
         
+        # if keys[pygame.K_RETURN]:
+        #     game.pause= not game.pause
 
         
 
 #------------- inputs ----------------------------------------------------
-            
-        if movementAvailable==0:
-            movementAvailable=5
-            if (keys[pygame.K_LEFT] or keys[pygame.K_a]):
-                # if jugador.facing == "left":
-                direction = "left"
-                dontMove=False
-                for caja in cajas:
-                    if jugador.collides(caja,direction):
-                        if  ( caja.collides([bloques,cajas,coins,enemigos],direction) or caja.position.x < tile_size ):
-                            dontMove = True
-                        else:
-                            caja.move(direction)
-                if not dontMove:
-                    dontMove = enemyCollitions(direction)
-                if not (jugador.position.x < tile_size or  jugador.collides(bloques,direction) or dontMove):
-                    coinCollitions(direction)
-                    jugador.move(direction)
-                    caminarSound.play()
-                # else:
-                
-                jugador.facing=direction
-                
-            if (keys[pygame.K_RIGHT] or keys[pygame.K_d]):
-                # if jugador.facing=="right":
-                direction = "right"
-                dontMove=False
-                for caja in cajas:
-                    if jugador.collides(caja,direction):
-                        if  (caja.position.x + caja.width + tile_size  > screenWidth  or caja.collides([bloques,cajas,coins,enemigos],direction) ):
-                            dontMove=True
-                        else:
-                            caja.move(direction)
-                if not dontMove:
-                    dontMove = enemyCollitions(direction)
-                if not (jugador.position.x + jugador.width + tile_size  > screenWidth  or  jugador.collides(bloques,direction)  or dontMove): 
-                    coinCollitions(direction)
-                    jugador.move(direction)
-                    caminarSound.play()
+        if not game.pause:   
+            if movementAvailable==0:
+                movementAvailable=5
+                if (keys[pygame.K_LEFT] or keys[pygame.K_a]):
+                    # if jugador.facing == "left":
+                    direction = "left"
+                    dontMove=False
+                    for caja in cajas:
+                        if jugador.collides(caja,direction):
+                            if  ( caja.collides([bloques,cajas,coins,enemigos],direction) or caja.position.x < tile_size ):
+                                dontMove = True
+                            else:
+                                caja.move(direction)
+                    if not dontMove:
+                        dontMove = enemyCollitions(direction)
+                    if not (jugador.position.x < tile_size or  jugador.collides(bloques,direction) or dontMove):
+                        coinCollitions(direction)
+                        jugador.move(direction)
+                        caminarSound.play()
+                    # else:
+                    
+                    jugador.facing=direction
+                    
+                if (keys[pygame.K_RIGHT] or keys[pygame.K_d]):
+                    # if jugador.facing=="right":
+                    direction = "right"
+                    dontMove=False
+                    for caja in cajas:
+                        if jugador.collides(caja,direction):
+                            if  (caja.position.x + caja.width + tile_size  > screenWidth  or caja.collides([bloques,cajas,coins,enemigos],direction) ):
+                                dontMove=True
+                            else:
+                                caja.move(direction)
+                    if not dontMove:
+                        dontMove = enemyCollitions(direction)
+                    if not (jugador.position.x + jugador.width + tile_size  > screenWidth  or  jugador.collides(bloques,direction)  or dontMove): 
+                        coinCollitions(direction)
+                        jugador.move(direction)
+                        caminarSound.play()
 
-                # else:
-                jugador.facing=direction
-                
-            if (keys[pygame.K_UP] or keys[pygame.K_w]):
-                # if jugador.facing=="up":
-                direction = "up"
-                dontMove=False
-                for caja in cajas:
-                    if jugador.collides(caja,direction):
-                        if  (caja.position.y - tile_size < jugador.offset  or  caja.collides([bloques,cajas,coins,enemigos],direction) ):
-                            dontMove=True
-                        else:
-                            caja.move(direction)
-                if not dontMove:
-                    dontMove = enemyCollitions(direction)
-                if not (jugador.position.y - tile_size < jugador.offset  or  jugador.collides(bloques,direction)  or dontMove):
-                    coinCollitions(direction)
-                    jugador.move(direction)
-                    caminarSound.play()
-                # else:
-                jugador.facing=direction
-                
-            if (keys[pygame.K_DOWN] or keys[pygame.K_s]):
-                # if jugador.facing=="down":
-                direction = "down"
-                dontMove=False
+                    # else:
+                    jugador.facing=direction
+                    
+                if (keys[pygame.K_UP] or keys[pygame.K_w]):
+                    # if jugador.facing=="up":
+                    direction = "up"
+                    dontMove=False
+                    for caja in cajas:
+                        if jugador.collides(caja,direction):
+                            if  (caja.position.y - tile_size < jugador.offset  or  caja.collides([bloques,cajas,coins,enemigos],direction) ):
+                                dontMove=True
+                            else:
+                                caja.move(direction)
+                    if not dontMove:
+                        dontMove = enemyCollitions(direction)
+                    if not (jugador.position.y - tile_size < jugador.offset  or  jugador.collides(bloques,direction)  or dontMove):
+                        coinCollitions(direction)
+                        jugador.move(direction)
+                        caminarSound.play()
+                    # else:
+                    jugador.facing=direction
+                    
+                if (keys[pygame.K_DOWN] or keys[pygame.K_s]):
+                    # if jugador.facing=="down":
+                    direction = "down"
+                    dontMove=False
 
-                for caja in cajas:
-                    if jugador.collides(caja,direction):
-                        if  (caja.position.y + tile_size >= screenHeight or  caja.collides([bloques,cajas,coins,enemigos],direction) ):
-                            dontMove=True
-                        else:
-                            caja.move(direction)
+                    for caja in cajas:
+                        if jugador.collides(caja,direction):
+                            if  (caja.position.y + tile_size >= screenHeight or  caja.collides([bloques,cajas,coins,enemigos],direction) ):
+                                dontMove=True
+                            else:
+                                caja.move(direction)
 
-                if not dontMove:
-                    dontMove = enemyCollitions(direction)
-                if not (jugador.position.y + tile_size >= screenHeight or  jugador.collides(bloques,direction)  or dontMove):
-                    coinCollitions(direction)
-                    jugador.move(direction)
-                    caminarSound.play()
-                # else:
-                jugador.facing=direction
-        else:
-            movementAvailable-=1
+                    if not dontMove:
+                        dontMove = enemyCollitions(direction)
+                    if not (jugador.position.y + tile_size >= screenHeight or  jugador.collides(bloques,direction)  or dontMove):
+                        coinCollitions(direction)
+                        jugador.move(direction)
+                        caminarSound.play()
+                    # else:
+                    jugador.facing=direction
+            else:
+                movementAvailable-=1
+        
 
-            if (keys[pygame.K_SPACE]):
-                print(jugador.position)
+        
         updateWindow()
 
     pygame.quit()
@@ -240,13 +215,46 @@ def enemyCollitions(direction):
         if jugador.collides(enemigos[i],direction):
             jugador.health-= enemigos[i].attack - jugador.defense
             enemigos[i].health-= jugador.attack - enemigos[i].defense
-            print(enemigos[i].health)
             if enemigos[i].health <=0:
                 jugador.gold+= enemigos[i].gold
                 enemigos.pop(i)
             return True
     return False
+def updateWindow():
+    WINDOW.fill((0,0,0))
+    WINDOW.blit(SCREEN,(200,0))
+    SCREEN.fill((100,0,100))
 
+    if not game.pause:
+        for i in range(1,tile_quantity):
+            pygame.draw.line(SCREEN,(0,0,0),(0,i*50),(screenWidth,i*50))
+            pygame.draw.line(SCREEN,(0,0,0),(i*50,0),(i*50,screenHeight))
+
+        for block in bloques:
+            block.draw(SCREEN)
+        for caja in cajas:
+            caja.draw(SCREEN)
+        for coin in coins:
+            coin.draw(SCREEN)
+        for enemigo in enemigos:
+            enemigo.draw(SCREEN)
+
+        jugador.draw(SCREEN)
+    else:
+        pauseText = font.render('Pause ', 1 , (255,255,255))
+        SCREEN.blit(pauseText,(screenWidth/2 - 20,screenHeight/2 - 20))
+
+# Textos en el costado
+    goldText = font.render('Gold: ' + str(jugador.gold) , 1 , (255,255,255))
+    healthText = font.render('Hp: ' + str(jugador.health) , 1 , (255,255,255))
+    attackText = font.render('Att: ' + str(jugador.attack) , 1 , (255,255,255))
+    defenseText = font.render('Def: ' + str(jugador.defense) , 1 , (255,255,255))
+    WINDOW.blit(goldText,(10,10))
+    WINDOW.blit(healthText,(10,50))
+    WINDOW.blit(attackText,(10,90))
+    WINDOW.blit(defenseText,(10,130))
+
+    pygame.display.update()
 if __name__ == "__main__":
     main()
 
