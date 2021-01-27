@@ -16,9 +16,11 @@ class Game:
         self.cajas=[]
         self.coins=[]
         self.enemigos=[]
+        self.tienda = Tienda(21,21)
         self.jugador=Jugador(20,20)
         self.escaleraArriba=Escalera(20,20,"up")
         self.escaleraAbajo=Escalera(20,20,"down")
+        self.menu = Menu()
         self.nivel = 0
         self.niveles=[
 [
@@ -31,8 +33,8 @@ class Game:
     [0,0,0,0,0,4,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,5,0,0,0,0],
     [0,0,0,2,0,0,0,0,3,0,0,0],
-    [0,0,0,0,0,3,0,0,0,0,0,0],
-    [0,0,4,0,0,0,0,0,4,0,0,0],
+    [0,0,0,0,0,3,0,0,0,0,0,5],
+    [0,0,4,0,0,0,0,0,4,0,5,8],
     [0,0,0,0,3,0,0,0,1,0,0,5]
 ],
 [
@@ -85,6 +87,10 @@ class Game:
                     x=j
                     y=i
                     self.escaleraAbajo=Escalera(x,y,"down")
+                elif nivel[i][j] == 8:
+                    x=j
+                    y=i
+                    self.tienda=Tienda(x,y)
 
                 if self.escaleraAbajo==None:
                     self.escaleraAbajo = Escalera(20,20,"down")
@@ -98,6 +104,7 @@ class Game:
         self.enemigos=[]
         self.escaleraArriba=None
         self.escaleraAbajo=None
+        self.tienda = Tienda(21,21)
 
     def subir(self):
         self.nivel+=1
@@ -123,8 +130,8 @@ class Game:
     [0,0,0,0,0,4,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,5,0,0,0,0],
     [0,0,0,2,0,0,0,0,3,0,0,0],
-    [0,0,0,0,0,3,0,0,0,0,0,0],
-    [0,0,4,0,0,0,0,0,4,0,0,0],
+    [0,0,0,0,0,3,0,0,0,0,0,5],
+    [0,0,4,0,0,0,0,0,4,0,5,8],
     [0,0,0,0,3,0,0,0,1,0,0,5]
 ],
 [
@@ -312,4 +319,56 @@ class Escalera:
         elif self.direction == "down":
             pygame.draw.rect(SCREEN,(203,0,222), (self.position.x,self.position.y,self.width,self.height) )
             SCREEN.blit(downText,(self.position.x, self.position.y))
+
+class Tienda:
+    def __init__(self,x,y):
+        self.cords =Vector2(x,y)
+        self.offset=1
+        self.position = Vector2(self.cords.x * tile_size  + self.offset,self.cords.y * tile_size + self.offset)
+        self.width=tile_size - self.offset*2
+        self.height=tile_size - self.offset*2
+        self.color =  (93, 194, 72)
+
+    def draw(self,SCREEN):
+        pygame.draw.rect(SCREEN,self.color, (self.position.x,self.position.y,self.width,self.height) )
+
+class Menu:
+    def __init__(self):
+        self.cords =Vector2(3,3)
+        self.offset=0
+        self.position = Vector2(self.cords.x * tile_size  + self.offset,self.cords.y * tile_size + self.offset)
+        self.width=tile_size * 6
+        self.height=tile_size * 6
+        self.color =  ( 203, 203, 225 )
+        self.arrowPosition=0
+        self.active=False
+        self.textHeight=0
+        self.textWidth=0
+        
+
+    def draw(self,SCREEN):
+        # pygame.draw.rect(SCREEN,self.color, (self.position.x,self.position.y,self.width,self.height) )
+        MENU = pygame.Surface([self.width,self.height])
+        font = pygame.font.SysFont('papyrus',20,True)
+        hpText = font.render('+ Hp ', 1 , (255,255,255))
+        attText = font.render('+ Att ', 1 , (255,255,255))
+        defText = font.render('+ Def ', 1 , (255,255,255))
+        exitText = font.render('Exit ', 1 , (255,255,255))
+        costText = font.render('Cost: 10 Gold ', 1 , (255,255,255))
+
+        textHeight= hpText.get_height()
+        textWidth= hpText.get_width()
+        self.textHeight=textHeight
+        self.textWidth=textWidth
+
+        pygame.draw.polygon(MENU, (0,255,255), [[textWidth+40,textHeight* 2+ 20+ self.arrowPosition], [textWidth+30,textHeight* 2+ 25+ self.arrowPosition], [textWidth+40,textHeight* 2+ 30+ self.arrowPosition]], 0)
+        
+        MENU.blit(costText,(10,10))
+        MENU.blit(hpText,(10,10 + textHeight *2))
+        MENU.blit(attText,(10,10 + textHeight * 4))
+        MENU.blit(defText,(10,10 + textHeight * 6))
+
+        MENU.blit(exitText,(10, self.height - textHeight))
+        SCREEN.blit(MENU,(self.position.x, self.position.y))
+
 

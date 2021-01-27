@@ -60,12 +60,13 @@ cajas =game.cajas
 coins= game.coins
 enemigos = game.enemigos
 escaleras = [game.escaleraArriba, game.escaleraAbajo]
+tienda = game.tienda
+menu = game.menu
 jugador=game.jugador
 
 
 
 def main():
-    global bloques, cajas, coins, enemigos, escaleraArriba, escaleraAbajo, jugador
 
     movementAvailable=0
     run = True
@@ -111,148 +112,192 @@ def main():
 
 #------------- inputs ----------------------------------------------------
         if not game.pause:   
-            if movementAvailable==0:
-                movementAvailable=5
-                if (keys[pygame.K_LEFT] or keys[pygame.K_a]):
-                    # if jugador.facing == "left":
-                    direction = "left"
-                    dontMove=False
-                    for caja in cajas:
-                        if jugador.collides(caja,direction):
-                            if  ( caja.collides([bloques,cajas,coins,enemigos,escaleras],direction) or caja.position.x < tile_size ):
-                                dontMove = True
+            if menu.active:
+                for event in events:
+                    if event.type == pygame.KEYDOWN:
+                        if (event.key == pygame.K_DOWN or event.key == pygame.K_s):
+                            if menu.arrowPosition == menu.textHeight*6:
+                                menu.arrowPosition=0
                             else:
-                                cords=caja.cords
-                                x= int(cords.x)
-                                y= int(cords.y)
-                                game.niveles[game.nivel][y][x]=0
-                                game.niveles[game.nivel][y][x-1]=3
-                                caja.move(direction)
-
-                    for escalera in escaleras:
-                        if escalera is not None and jugador.collides(escalera,direction):
-                            dontMove=True
-                            if escalera.direction == "up":
-                                game.subir()
+                                menu.arrowPosition+= menu.textHeight *2
+                        if  ( event.key == pygame.K_UP or event.key == pygame.K_w):
+                            if menu.arrowPosition == 0:
+                                menu.arrowPosition = menu.textHeight * 6
                             else:
-                                game.bajar()
-                            actualizarGameObjects()
+                                menu.arrowPosition-= menu.textHeight *2
+                        if event.key == pygame.K_SPACE:
+                            if jugador.gold >= 10:
+                                if menu.arrowPosition ==0:
+                                    jugador.health+=10
+                                if menu.arrowPosition ==menu.textHeight *2:
+                                    jugador.attack+=1
+                                if menu.arrowPosition ==menu.textHeight *4:
+                                    jugador.defense+=1
+                                jugador.gold -= 10
+                            if menu.arrowPosition ==menu.textHeight *6:
+                                menu.active=False
+                                menu.arrowPosition=0
 
-                    if not dontMove:
-                        dontMove = enemyCollitions(direction)
-                    if not (jugador.position.x < tile_size or  jugador.collides(bloques,direction) or dontMove):
-                        coinCollitions(direction)
-                        jugador.move(direction)
-                        caminarSound.play()
-                    # else:
-                    
-                    jugador.facing=direction
-                    
-                if (keys[pygame.K_RIGHT] or keys[pygame.K_d]):
-                    # if jugador.facing=="right":
-                    direction = "right"
-                    dontMove=False
-                    for caja in cajas:
-                        if jugador.collides(caja,direction):
-                            if  (caja.position.x + caja.width + tile_size  > screenWidth  or caja.collides([bloques,cajas,coins,enemigos,escaleras],direction) ):
-                                dontMove=True
-                            else:
-                                cords=caja.cords
-                                x= int(cords.x)
-                                y= int(cords.y)
-                                game.niveles[game.nivel][y][x]=0
-                                game.niveles[game.nivel][y][x+1]=3
-                                caja.move(direction)
 
-                    for escalera in escaleras:
-                        if escalera is not None and jugador.collides(escalera,direction):
-                            dontMove=True
-                            if escalera.direction == "up":
-                                game.subir()
-                            else:
-                                game.bajar()
-                            actualizarGameObjects()
-
-                    if not dontMove:
-                        dontMove = enemyCollitions(direction)
-                    if not (jugador.position.x + jugador.width + tile_size  > screenWidth  or  jugador.collides(bloques,direction)  or dontMove): 
-                        coinCollitions(direction)
-                        jugador.move(direction)
-                        caminarSound.play()
-
-                    # else:
-                    jugador.facing=direction
-                    
-                if (keys[pygame.K_UP] or keys[pygame.K_w]):
-                    # if jugador.facing=="up":
-                    direction = "up"
-                    dontMove=False
-                    for caja in cajas:
-                        if jugador.collides(caja,direction):
-                            if  (caja.position.y - tile_size < jugador.offset  or  caja.collides([bloques,cajas,coins,enemigos,escaleras],direction) ):
-                                dontMove=True
-                            else:
-                                cords=caja.cords
-                                x= int(cords.x)
-                                y= int(cords.y)
-                                game.niveles[game.nivel][y][x]=0
-                                game.niveles[game.nivel][y-1][x]=3
-                                caja.move(direction)
-
-                    for escalera in escaleras:
-                        if escalera is not None and jugador.collides(escalera,direction):
-                            dontMove=True
-                            if escalera.direction == "up":
-                                game.subir()
-                            else:
-                                game.bajar()
-                            actualizarGameObjects()
-                    
-                    if not dontMove:
-                        dontMove = enemyCollitions(direction)
-                    if not (jugador.position.y - tile_size < jugador.offset  or  jugador.collides(bloques,direction)  or dontMove):
-                        coinCollitions(direction)
-                        jugador.move(direction)
-                        caminarSound.play()
-                    # else:
-                    jugador.facing=direction
-                    
-                if (keys[pygame.K_DOWN] or keys[pygame.K_s]):
-                    # if jugador.facing=="down":
-                    direction = "down"
-                    dontMove=False
-
-                    for caja in cajas:
-                        if jugador.collides(caja,direction):
-                            if  (caja.position.y + tile_size >= screenHeight or  caja.collides([bloques,cajas,coins,enemigos,escaleras],direction) ):
-                                dontMove=True
-                            else:
-                                cords=caja.cords
-                                x= int(cords.x)
-                                y= int(cords.y)
-                                game.niveles[game.nivel][y][x]=0
-                                game.niveles[game.nivel][y+1][x]=3
-                                caja.move(direction)
-
-                    for escalera in escaleras:
-                        if escalera is not None and jugador.collides(escalera,direction):
-                            dontMove=True
-                            if escalera.direction == "up":
-                                game.subir()
-                            else:
-                                game.bajar()
-                            actualizarGameObjects()
-
-                    if not dontMove:
-                        dontMove = enemyCollitions(direction)
-                    if not (jugador.position.y + tile_size >= screenHeight or  jugador.collides(bloques,direction)  or dontMove):
-                        coinCollitions(direction)
-                        jugador.move(direction)
-                        caminarSound.play()
-                    # else:
-                    jugador.facing=direction
             else:
-                movementAvailable-=1
+                if movementAvailable==0:
+                    movementAvailable=5
+                    if (keys[pygame.K_LEFT] or keys[pygame.K_a]):
+                        # if jugador.facing == "left":
+                        direction = "left"
+                        dontMove=False
+                        for caja in cajas:
+                            if jugador.collides(caja,direction):
+                                if  ( caja.collides([bloques,cajas,coins,enemigos,escaleras],direction) or caja.position.x < tile_size ):
+                                    dontMove = True
+                                else:
+                                    cords=caja.cords
+                                    x= int(cords.x)
+                                    y= int(cords.y)
+                                    game.niveles[game.nivel][y][x]=0
+                                    game.niveles[game.nivel][y][x-1]=3
+                                    caja.move(direction)
+
+                        for escalera in escaleras:
+                            if escalera is not None and jugador.collides(escalera,direction):
+                                dontMove=True
+                                if escalera.direction == "up":
+                                    game.subir()
+                                else:
+                                    game.bajar()
+                                actualizarGameObjects()
+
+                        if jugador.collides(tienda,direction):
+                            dontMove=True
+                            menu.active=True
+
+                        if not dontMove:
+                            dontMove = enemyCollitions(direction)
+                        if not (jugador.position.x < tile_size or  jugador.collides(bloques,direction) or dontMove):
+                            coinCollitions(direction)
+                            jugador.move(direction)
+                            caminarSound.play()
+                        # else:
+                        
+                        jugador.facing=direction
+                        
+                    if (keys[pygame.K_RIGHT] or keys[pygame.K_d]):
+                        # if jugador.facing=="right":
+                        direction = "right"
+                        dontMove=False
+                        for caja in cajas:
+                            if jugador.collides(caja,direction):
+                                if  (caja.position.x + caja.width + tile_size  > screenWidth  or caja.collides([bloques,cajas,coins,enemigos,escaleras],direction) ):
+                                    dontMove=True
+                                else:
+                                    cords=caja.cords
+                                    x= int(cords.x)
+                                    y= int(cords.y)
+                                    game.niveles[game.nivel][y][x]=0
+                                    game.niveles[game.nivel][y][x+1]=3
+                                    caja.move(direction)
+
+                        for escalera in escaleras:
+                            if escalera is not None and jugador.collides(escalera,direction):
+                                dontMove=True
+                                if escalera.direction == "up":
+                                    game.subir()
+                                else:
+                                    game.bajar()
+                                actualizarGameObjects()
+
+                        if jugador.collides(tienda,direction):
+                            dontMove=True
+                            menu.active=True
+
+                        if not dontMove:
+                            dontMove = enemyCollitions(direction)
+                        if not (jugador.position.x + jugador.width + tile_size  > screenWidth  or  jugador.collides(bloques,direction)  or dontMove): 
+                            coinCollitions(direction)
+                            jugador.move(direction)
+                            caminarSound.play()
+
+                        # else:
+                        jugador.facing=direction
+                        
+                    if (keys[pygame.K_UP] or keys[pygame.K_w]):
+                        # if jugador.facing=="up":
+                        direction = "up"
+                        dontMove=False
+                        for caja in cajas:
+                            if jugador.collides(caja,direction):
+                                if  (caja.position.y - tile_size < jugador.offset  or  caja.collides([bloques,cajas,coins,enemigos,escaleras],direction) ):
+                                    dontMove=True
+                                else:
+                                    cords=caja.cords
+                                    x= int(cords.x)
+                                    y= int(cords.y)
+                                    game.niveles[game.nivel][y][x]=0
+                                    game.niveles[game.nivel][y-1][x]=3
+                                    caja.move(direction)
+
+                        for escalera in escaleras:
+                            if escalera is not None and jugador.collides(escalera,direction):
+                                dontMove=True
+                                if escalera.direction == "up":
+                                    game.subir()
+                                else:
+                                    game.bajar()
+                                actualizarGameObjects()
+
+                        if jugador.collides(tienda,direction):
+                            dontMove=True
+                            menu.active=True
+
+                        if not dontMove:
+                            dontMove = enemyCollitions(direction)
+                        if not (jugador.position.y - tile_size < jugador.offset  or  jugador.collides(bloques,direction)  or dontMove):
+                            coinCollitions(direction)
+                            jugador.move(direction)
+                            caminarSound.play()
+                        # else:
+                        jugador.facing=direction
+                        
+                    if (keys[pygame.K_DOWN] or keys[pygame.K_s]):
+                        # if jugador.facing=="down":
+                        direction = "down"
+                        dontMove=False
+
+                        for caja in cajas:
+                            if jugador.collides(caja,direction):
+                                if  (caja.position.y + tile_size >= screenHeight or  caja.collides([bloques,cajas,coins,enemigos,escaleras],direction) ):
+                                    dontMove=True
+                                else:
+                                    cords=caja.cords
+                                    x= int(cords.x)
+                                    y= int(cords.y)
+                                    game.niveles[game.nivel][y][x]=0
+                                    game.niveles[game.nivel][y+1][x]=3
+                                    caja.move(direction)
+
+                        for escalera in escaleras:
+                            if escalera is not None and jugador.collides(escalera,direction):
+                                dontMove=True
+                                if escalera.direction == "up":
+                                    game.subir()
+                                else:
+                                    game.bajar()
+                                actualizarGameObjects()
+
+                        if jugador.collides(tienda,direction):
+                            dontMove=True
+                            menu.active=True
+
+                        if not dontMove:
+                            dontMove = enemyCollitions(direction)
+                        if not (jugador.position.y + tile_size >= screenHeight or  jugador.collides(bloques,direction)  or dontMove):
+                            coinCollitions(direction)
+                            jugador.move(direction)
+                            caminarSound.play()
+                        # else:
+                        jugador.facing=direction
+                else:
+                    movementAvailable-=1
         
 
         if jugador.health<=0:
@@ -271,14 +316,17 @@ def main():
     pygame.quit()
 
 def actualizarGameObjects():
-    global bloques, cajas, coins, enemigos, escaleras, jugador
+    global bloques, cajas, coins, enemigos, escaleras, jugador, tienda
     bloques =game.bloques
     cajas =game.cajas
     coins= game.coins
     enemigos = game.enemigos
     escaleras[1]= game.escaleraAbajo
     escaleras[0] = game.escaleraArriba
+    tienda=game.tienda
     jugador=game.jugador
+
+
 def coinCollitions(direction):
     for i in range(len(coins)):
         if jugador.collides(coins[i],direction):
@@ -329,6 +377,10 @@ def updateWindow():
                 escalera.draw(SCREEN)
             except:
                 pass
+        if tienda is not None:
+            tienda.draw(SCREEN)
+        if menu.active:
+            menu.draw(SCREEN)
         
         jugador.draw(SCREEN)
     else:
