@@ -59,8 +59,6 @@ bloques =game.bloques
 cajas =game.cajas
 coins= game.coins
 enemigos = game.enemigos
-# escaleraAbajo= game.escaleraAbajo
-# escaleraArriba = game.escaleraArriba
 escaleras = [game.escaleraArriba, game.escaleraAbajo]
 jugador=game.jugador
 
@@ -121,7 +119,7 @@ def main():
                     dontMove=False
                     for caja in cajas:
                         if jugador.collides(caja,direction):
-                            if  ( caja.collides([bloques,cajas,coins,enemigos],direction) or caja.position.x < tile_size ):
+                            if  ( caja.collides([bloques,cajas,coins,enemigos,escaleras],direction) or caja.position.x < tile_size ):
                                 dontMove = True
                             else:
                                 cords=caja.cords
@@ -138,13 +136,7 @@ def main():
                                 game.subir()
                             else:
                                 game.bajar()
-                            bloques =game.bloques
-                            cajas =game.cajas
-                            coins= game.coins
-                            enemigos = game.enemigos
-                            escaleras[1]= game.escaleraAbajo
-                            escaleras[0] = game.escaleraArriba
-                            jugador=game.jugador
+                            actualizarGameObjects()
 
                     if not dontMove:
                         dontMove = enemyCollitions(direction)
@@ -162,7 +154,7 @@ def main():
                     dontMove=False
                     for caja in cajas:
                         if jugador.collides(caja,direction):
-                            if  (caja.position.x + caja.width + tile_size  > screenWidth  or caja.collides([bloques,cajas,coins,enemigos],direction) ):
+                            if  (caja.position.x + caja.width + tile_size  > screenWidth  or caja.collides([bloques,cajas,coins,enemigos,escaleras],direction) ):
                                 dontMove=True
                             else:
                                 cords=caja.cords
@@ -179,13 +171,7 @@ def main():
                                 game.subir()
                             else:
                                 game.bajar()
-                            bloques =game.bloques
-                            cajas =game.cajas
-                            coins= game.coins
-                            enemigos = game.enemigos
-                            escaleras[1]= game.escaleraAbajo
-                            escaleras[0] = game.escaleraArriba
-                            jugador=game.jugador
+                            actualizarGameObjects()
 
                     if not dontMove:
                         dontMove = enemyCollitions(direction)
@@ -203,7 +189,7 @@ def main():
                     dontMove=False
                     for caja in cajas:
                         if jugador.collides(caja,direction):
-                            if  (caja.position.y - tile_size < jugador.offset  or  caja.collides([bloques,cajas,coins,enemigos],direction) ):
+                            if  (caja.position.y - tile_size < jugador.offset  or  caja.collides([bloques,cajas,coins,enemigos,escaleras],direction) ):
                                 dontMove=True
                             else:
                                 cords=caja.cords
@@ -220,13 +206,7 @@ def main():
                                 game.subir()
                             else:
                                 game.bajar()
-                            bloques =game.bloques
-                            cajas =game.cajas
-                            coins= game.coins
-                            enemigos = game.enemigos
-                            escaleras[1]= game.escaleraAbajo
-                            escaleras[0] = game.escaleraArriba
-                            jugador=game.jugador
+                            actualizarGameObjects()
                     
                     if not dontMove:
                         dontMove = enemyCollitions(direction)
@@ -244,7 +224,7 @@ def main():
 
                     for caja in cajas:
                         if jugador.collides(caja,direction):
-                            if  (caja.position.y + tile_size >= screenHeight or  caja.collides([bloques,cajas,coins,enemigos],direction) ):
+                            if  (caja.position.y + tile_size >= screenHeight or  caja.collides([bloques,cajas,coins,enemigos,escaleras],direction) ):
                                 dontMove=True
                             else:
                                 cords=caja.cords
@@ -261,13 +241,7 @@ def main():
                                 game.subir()
                             else:
                                 game.bajar()
-                            bloques =game.bloques
-                            cajas =game.cajas
-                            coins= game.coins
-                            enemigos = game.enemigos
-                            escaleras[1]= game.escaleraAbajo
-                            escaleras[0] = game.escaleraArriba
-                            jugador=game.jugador
+                            actualizarGameObjects()
 
                     if not dontMove:
                         dontMove = enemyCollitions(direction)
@@ -281,12 +255,30 @@ def main():
                 movementAvailable-=1
         
 
-        
+        if jugador.health<=0:
+            updateWindow()
+            deadText = font.render('You Dead ', 1 ,(0,0,0) , (255,255,255))
+            WINDOW.blit(deadText,((screenWidth+300)/2 ,screenHeight/2 ))
+
+            pygame.display.update()
+            pygame.time.delay(3000)
+
+            game.restart()
+            actualizarGameObjects()
+            
         updateWindow()
 
     pygame.quit()
 
-
+def actualizarGameObjects():
+    global bloques, cajas, coins, enemigos, escaleras, jugador
+    bloques =game.bloques
+    cajas =game.cajas
+    coins= game.coins
+    enemigos = game.enemigos
+    escaleras[1]= game.escaleraAbajo
+    escaleras[0] = game.escaleraArriba
+    jugador=game.jugador
 def coinCollitions(direction):
     for i in range(len(coins)):
         if jugador.collides(coins[i],direction):
@@ -341,6 +333,7 @@ def updateWindow():
         jugador.draw(SCREEN)
     else:
         pauseText = font.render('Pause ', 1 , (255,255,255))
+        
         SCREEN.blit(pauseText,(screenWidth/2 - 20,screenHeight/2 - 20))
 
 # Textos en el costado

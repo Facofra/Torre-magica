@@ -17,8 +17,8 @@ class Game:
         self.coins=[]
         self.enemigos=[]
         self.jugador=Jugador(20,20)
-        self.escaleraArriba=None
-        self.escaleraAbajo=None
+        self.escaleraArriba=Escalera(20,20,"up")
+        self.escaleraAbajo=Escalera(20,20,"down")
         self.nivel = 0
         self.niveles=[
 [
@@ -86,6 +86,11 @@ class Game:
                     y=i
                     self.escaleraAbajo=Escalera(x,y,"down")
 
+                if self.escaleraAbajo==None:
+                    self.escaleraAbajo = Escalera(20,20,"down")
+                if self.escaleraArriba==None:
+                    self.escaleraArriba = Escalera(20,20,"up")
+
     def vaciarGameObjects(self):
         self.bloques=[]
         self.cajas=[]
@@ -98,18 +103,51 @@ class Game:
         self.nivel+=1
         self.vaciarGameObjects()
         self.crearNivel()
-        print("subiste")
         pass
 
     def bajar(self):
         self.nivel-=1
         self.vaciarGameObjects()
         self.crearNivel()
-        print("bajaste")
         pass
 
-    def collition(self):
-        pass
+    def restart(self):
+        self.niveles=[
+[
+    [0,0,0,0,0,0,6,0,0,0,0,4],
+    [4,0,0,0,2,2,2,0,0,0,0,0],
+    [4,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,4,0,0,0,0,5,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,4,0,4],
+    [4,0,0,3,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,4,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,5,0,0,0,0],
+    [0,0,0,2,0,0,0,0,3,0,0,0],
+    [0,0,0,0,0,3,0,0,0,0,0,0],
+    [0,0,4,0,0,0,0,0,4,0,0,0],
+    [0,0,0,0,3,0,0,0,1,0,0,5]
+],
+[
+    [7,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,5,0,0,0,0,0,0,0],
+    [0,0,0,2,5,2,0,0,0,0,0,0],
+    [0,0,0,2,0,2,0,0,0,0,0,0],
+    [2,2,2,2,0,2,2,0,0,0,0,0],
+    [0,1,0,0,0,0,0,2,0,0,0,0]
+]
+
+        ]
+        self.vaciarGameObjects()
+        self.jugador=Jugador(20,20)
+        self.nivel=0
+        self.crearNivel()
+        
 
 class Jugador:
     def __init__(self,x,y):
@@ -265,8 +303,13 @@ class Escalera:
         self.color =  ( 0, 203, 225 )
         self.direction=direction
     def draw(self,SCREEN):
+        font = pygame.font.SysFont('papyrus',15,True)
+        upText = font.render('up ', 1 , (255,255,255))
+        downText = font.render('down ', 1 , (255,255,255))
         if self.direction == "up":
             pygame.draw.rect(SCREEN,self.color, (self.position.x,self.position.y,self.width,self.height) )
+            SCREEN.blit(upText,(self.position.x, self.position.y))
         elif self.direction == "down":
             pygame.draw.rect(SCREEN,(203,0,222), (self.position.x,self.position.y,self.width,self.height) )
+            SCREEN.blit(downText,(self.position.x, self.position.y))
 
