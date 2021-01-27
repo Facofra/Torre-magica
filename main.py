@@ -157,15 +157,8 @@ def main():
                                     game.niveles[game.nivel][y][x]=0
                                     game.niveles[game.nivel][y][x-1]=3
                                     caja.move(direction)
-
-                        for escalera in escaleras:
-                            if escalera is not None and jugador.collides(escalera,direction):
-                                dontMove=True
-                                if escalera.direction == "up":
-                                    game.subir()
-                                else:
-                                    game.bajar()
-                                actualizarGameObjects()
+                        if not dontMove:
+                            dontMove= escaleraCollitions(direction)
 
                         if jugador.collides(tienda,direction):
                             dontMove=True
@@ -196,15 +189,8 @@ def main():
                                     game.niveles[game.nivel][y][x]=0
                                     game.niveles[game.nivel][y][x+1]=3
                                     caja.move(direction)
-
-                        for escalera in escaleras:
-                            if escalera is not None and jugador.collides(escalera,direction):
-                                dontMove=True
-                                if escalera.direction == "up":
-                                    game.subir()
-                                else:
-                                    game.bajar()
-                                actualizarGameObjects()
+                        if not dontMove:
+                            dontMove= escaleraCollitions(direction)
 
                         if jugador.collides(tienda,direction):
                             dontMove=True
@@ -235,15 +221,8 @@ def main():
                                     game.niveles[game.nivel][y][x]=0
                                     game.niveles[game.nivel][y-1][x]=3
                                     caja.move(direction)
-
-                        for escalera in escaleras:
-                            if escalera is not None and jugador.collides(escalera,direction):
-                                dontMove=True
-                                if escalera.direction == "up":
-                                    game.subir()
-                                else:
-                                    game.bajar()
-                                actualizarGameObjects()
+                        if not dontMove:
+                            dontMove= escaleraCollitions(direction)
 
                         if jugador.collides(tienda,direction):
                             dontMove=True
@@ -274,15 +253,8 @@ def main():
                                     game.niveles[game.nivel][y][x]=0
                                     game.niveles[game.nivel][y+1][x]=3
                                     caja.move(direction)
-
-                        for escalera in escaleras:
-                            if escalera is not None and jugador.collides(escalera,direction):
-                                dontMove=True
-                                if escalera.direction == "up":
-                                    game.subir()
-                                else:
-                                    game.bajar()
-                                actualizarGameObjects()
+                        if not dontMove:
+                            dontMove= escaleraCollitions(direction)
 
                         if jugador.collides(tienda,direction):
                             dontMove=True
@@ -326,7 +298,27 @@ def actualizarGameObjects():
     tienda=game.tienda
     jugador=game.jugador
 
-
+def escaleraCollitions(direction):
+    for escalera in escaleras:
+        if escalera is not None and jugador.collides(escalera,direction):
+            cords=jugador.cords
+            x= int(cords.x)
+            y= int(cords.y)
+            for i in range(tile_quantity):
+                for j in range(tile_quantity):
+                    if game.niveles[game.nivel][j][i]==1:
+                        game.niveles[game.nivel][j][i]=0
+            if escalera.direction == "up":
+                game.niveles[game.nivel+1][y][x]=1
+                game.subir()
+                actualizarGameObjects()
+                return True
+            else:
+                game.niveles[game.nivel-1][y][x]=1
+                game.bajar()
+                actualizarGameObjects()
+                return True
+    return False
 def coinCollitions(direction):
     for i in range(len(coins)):
         if jugador.collides(coins[i],direction):
