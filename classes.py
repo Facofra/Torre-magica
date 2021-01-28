@@ -16,6 +16,7 @@ class Game:
         self.cajas=[]
         self.coins=[]
         self.enemigos=[]
+        self.agujeros=[]
         self.tienda = Tienda(21,21)
         self.jugador=Jugador(20,20)
         self.escaleraArriba=Escalera(20,20,"up")
@@ -33,23 +34,23 @@ class Game:
     [0,0,0,0,0,0,4,0,0,0,0,0],
     [0,0,0,0,2,2,0,2,2,0,0,0],
     [2,2,2,2,2,0,0,0,2,2,2,2],
-    [0,0,0,0,0,0,0,0,3,0,0,4],
+    [0,0,0,3,0,0,0,0,3,0,0,4],
     [0,1,0,0,2,0,0,0,2,4,4,5],
     [0,0,0,0,2,0,0,0,2,4,5,4]
 ],
 [
-    [0,0,0,0,0,0,7,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,5,0,0,0,0,0,0,0],
-    [0,0,0,2,5,2,0,0,0,0,0,0],
-    [0,0,0,2,0,2,0,0,0,0,0,0],
-    [2,2,2,2,0,2,2,0,0,0,0,0],
-    [0,0,0,0,0,0,0,2,0,0,0,0]
+    [4,0,0,2,0,0,0,0,3,0,0,7],
+    [0,2,0,0,2,0,2,2,2,2,0,0],
+    [0,2,2,0,0,0,2,0,0,0,2,0],
+    [0,2,4,2,2,2,0,0,2,0,2,3],
+    [0,2,5,0,0,0,0,2,0,0,2,6],
+    [0,0,2,2,0,2,2,0,0,2,0,0],
+    [2,3,0,0,0,0,2,0,2,0,0,2],
+    [4,0,2,2,2,0,2,0,0,0,2,4],
+    [0,2,2,0,0,0,2,0,0,2,4,4],
+    [0,0,0,0,2,0,2,0,0,5,3,2],
+    [0,2,2,5,2,0,2,0,0,5,3,4],
+    [5,0,4,4,2,0,3,5,0,2,4,4]
 ]
 
         ]
@@ -91,6 +92,10 @@ class Game:
                     x=j
                     y=i
                     self.tienda=Tienda(x,y)
+                elif nivel[i][j] == 9:
+                    x=j
+                    y=i
+                    self.agujeros.append(Agujero(x,y))
 
                 if self.escaleraAbajo==None:
                     self.escaleraAbajo = Escalera(20,20,"down")
@@ -102,6 +107,7 @@ class Game:
         self.cajas=[]
         self.coins=[]
         self.enemigos=[]
+        self.agujeros=[]
         self.escaleraArriba=None
         self.escaleraAbajo=None
         self.tienda = Tienda(21,21)
@@ -119,7 +125,7 @@ class Game:
         pass
 
     def restart(self):
-        self.niveles=self.nivelesIntactos
+        self.niveles= copy.deepcopy(self.nivelesIntactos)
         self.vaciarGameObjects()
         self.jugador=Jugador(20,20)
         self.nivel=0
@@ -136,7 +142,7 @@ class Jugador:
         self.color =  (255, 101, 68)
         self.vel = tile_size
         self.facing = "right"
-        self.health=10
+        self.health=20
         self.attack = 1
         self.defense = 1
         self.gold=0
@@ -262,8 +268,8 @@ class Enemigo:
         self.height= tile_size - self.offset*2
         self.color =  (255, 101, 68)
         self.vel = tile_size
-        self.health=5
-        self.attack = 2
+        self.health=3
+        self.attack = 3
         self.defense = 0
         self.gold=1
         
@@ -301,6 +307,20 @@ class Tienda:
 
     def draw(self,SCREEN):
         pygame.draw.rect(SCREEN,self.color, (self.position.x,self.position.y,self.width,self.height) )
+
+class Agujero:
+    def __init__(self,x,y):
+        self.cords =Vector2(x,y)
+        self.offset=10
+        self.position = Vector2(self.cords.x * tile_size  + self.offset,self.cords.y * tile_size + self.offset)
+        self.width=tile_size - self.offset*2
+        self.height=tile_size - self.offset*2
+        self.color = ( 0, 0, 0 )
+        
+
+    def draw(self,SCREEN):
+        pygame.draw.rect(SCREEN,self.color, (self.position.x,self.position.y,self.width,self.height) )
+        
 
 class Menu:
     def __init__(self):

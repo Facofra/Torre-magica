@@ -14,8 +14,6 @@ font = pygame.font.SysFont('papyrus',20,True)
 
 
 # SONIDOS
-cristalSound = pygame.mixer.Sound('Sounds/cristal.mp3')
-cristalSound.set_volume(0.09)
 caminarSound = pygame.mixer.Sound('Sounds/caminar.mp3')
 coinSound = pygame.mixer.Sound('Sounds/coin.mp3')
 
@@ -27,6 +25,7 @@ bloques =game.bloques
 cajas =game.cajas
 coins= game.coins
 enemigos = game.enemigos
+agujeros = game.agujeros
 escaleras = [game.escaleraArriba, game.escaleraAbajo]
 tienda = game.tienda
 menu = game.menu
@@ -47,24 +46,12 @@ def main():
             
             if event.type == pygame.QUIT:
                 run = False
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                posicion = pygame.mouse.get_pos()
-                x=posicion[0]-200
-                y=posicion[1]
-                x= int(x/tile_size)
-                y= int(y/tile_size)
-                
-                if event.button ==1:
-                    bloques.append(Block(x,y)) 
-                elif event.button==3:
-                    for i in range(len(bloques)):
-                        if bloques[i].cords == Vector2(x,y):
-                            cristalSound.play()
-                            bloques.pop(i)
-                            break
+
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
                     game.pause=not game.pause
+                    for agujero in agujeros:
+                        print(agujero)
 
 
 
@@ -114,7 +101,7 @@ def main():
                         # if jugador.facing == "left":
                         direction = "left"
                         dontMove=False
-                        for caja in cajas:
+                        for i, caja in enumerate(cajas):
                             if jugador.collides(caja,direction):
                                 if  ( caja.collides([bloques,cajas,coins,enemigos,escaleras,tienda],direction) or caja.position.x < tile_size ):
                                     dontMove = True
@@ -123,8 +110,17 @@ def main():
                                     x= int(cords.x)
                                     y= int(cords.y)
                                     game.niveles[game.nivel][y][x]=0
-                                    game.niveles[game.nivel][y][x-1]=3
-                                    caja.move(direction)
+
+                                    if caja.collides(agujeros,direction):
+                                        cajas.pop(i)
+                                        game.niveles[game.nivel][y][x-1]=0
+                                        for i, agujero in enumerate(agujeros):
+                                            if agujero.cords == Vector2(x-1,y):
+                                                agujeros.pop(i)
+                                                break
+                                    else:
+                                        game.niveles[game.nivel][y][x-1]=3
+                                        caja.move(direction)
                         if not dontMove:
                             dontMove= escaleraCollitions(direction)
 
@@ -134,7 +130,7 @@ def main():
 
                         if not dontMove:
                             dontMove = enemyCollitions(direction)
-                        if not (jugador.position.x < tile_size or  jugador.collides(bloques,direction) or dontMove):
+                        if not (jugador.position.x < tile_size or  jugador.collides(bloques,direction) or jugador.collides(agujeros,direction) or dontMove):
                             coinCollitions(direction)
                             jugador.move(direction)
                             caminarSound.play()
@@ -146,7 +142,7 @@ def main():
                         # if jugador.facing=="right":
                         direction = "right"
                         dontMove=False
-                        for caja in cajas:
+                        for i, caja in enumerate(cajas):
                             if jugador.collides(caja,direction):
                                 if  (caja.position.x + caja.width + tile_size  > screenWidth  or caja.collides([bloques,cajas,coins,enemigos,escaleras,tienda],direction) ):
                                     dontMove=True
@@ -155,8 +151,17 @@ def main():
                                     x= int(cords.x)
                                     y= int(cords.y)
                                     game.niveles[game.nivel][y][x]=0
-                                    game.niveles[game.nivel][y][x+1]=3
-                                    caja.move(direction)
+
+                                    if caja.collides(agujeros,direction):
+                                        cajas.pop(i)
+                                        game.niveles[game.nivel][y][x+1]=0
+                                        for i, agujero in enumerate(agujeros):
+                                            if agujero.cords == Vector2(x+1,y):
+                                                agujeros.pop(i)
+                                                break
+                                    else:
+                                        game.niveles[game.nivel][y][x+1]=3
+                                        caja.move(direction)
                         if not dontMove:
                             dontMove= escaleraCollitions(direction)
 
@@ -166,7 +171,7 @@ def main():
 
                         if not dontMove:
                             dontMove = enemyCollitions(direction)
-                        if not (jugador.position.x + jugador.width + tile_size  > screenWidth  or  jugador.collides(bloques,direction)  or dontMove): 
+                        if not (jugador.position.x + jugador.width + tile_size  > screenWidth  or  jugador.collides(bloques,direction) or jugador.collides(agujeros,direction)  or dontMove): 
                             coinCollitions(direction)
                             jugador.move(direction)
                             caminarSound.play()
@@ -178,7 +183,7 @@ def main():
                         # if jugador.facing=="up":
                         direction = "up"
                         dontMove=False
-                        for caja in cajas:
+                        for i, caja in enumerate(cajas):
                             if jugador.collides(caja,direction):
                                 if  (caja.position.y - tile_size < jugador.offset  or  caja.collides([bloques,cajas,coins,enemigos,escaleras,tienda],direction) ):
                                     dontMove=True
@@ -187,8 +192,16 @@ def main():
                                     x= int(cords.x)
                                     y= int(cords.y)
                                     game.niveles[game.nivel][y][x]=0
-                                    game.niveles[game.nivel][y-1][x]=3
-                                    caja.move(direction)
+                                    if caja.collides(agujeros,direction):
+                                        cajas.pop(i)
+                                        game.niveles[game.nivel][y-1][x]=0
+                                        for i, agujero in enumerate(agujeros):
+                                            if agujero.cords == Vector2(x,y-1):
+                                                agujeros.pop(i)
+                                                break
+                                    else:
+                                        game.niveles[game.nivel][y-1][x]=3
+                                        caja.move(direction)
                         if not dontMove:
                             dontMove= escaleraCollitions(direction)
 
@@ -198,7 +211,7 @@ def main():
 
                         if not dontMove:
                             dontMove = enemyCollitions(direction)
-                        if not (jugador.position.y - tile_size < jugador.offset  or  jugador.collides(bloques,direction)  or dontMove):
+                        if not (jugador.position.y - tile_size < jugador.offset  or  jugador.collides(bloques,direction) or jugador.collides(agujeros,direction)  or dontMove):
                             coinCollitions(direction)
                             jugador.move(direction)
                             caminarSound.play()
@@ -210,7 +223,7 @@ def main():
                         direction = "down"
                         dontMove=False
 
-                        for caja in cajas:
+                        for i, caja in enumerate(cajas):
                             if jugador.collides(caja,direction):
                                 if  (caja.position.y + tile_size >= screenHeight or  caja.collides([bloques,cajas,coins,enemigos,escaleras,tienda],direction) ):
                                     dontMove=True
@@ -219,8 +232,16 @@ def main():
                                     x= int(cords.x)
                                     y= int(cords.y)
                                     game.niveles[game.nivel][y][x]=0
-                                    game.niveles[game.nivel][y+1][x]=3
-                                    caja.move(direction)
+                                    if caja.collides(agujeros,direction):
+                                        cajas.pop(i)
+                                        game.niveles[game.nivel][y+1][x]=0
+                                        for i, agujero in enumerate(agujeros):
+                                            if agujero.cords == Vector2(x,y+1):
+                                                agujeros.pop(i)
+                                                break
+                                    else:
+                                        game.niveles[game.nivel][y+1][x]=3
+                                        caja.move(direction)
                         if not dontMove:
                             dontMove= escaleraCollitions(direction)
 
@@ -230,7 +251,7 @@ def main():
 
                         if not dontMove:
                             dontMove = enemyCollitions(direction)
-                        if not (jugador.position.y + tile_size >= screenHeight or  jugador.collides(bloques,direction)  or dontMove):
+                        if not (jugador.position.y + tile_size >= screenHeight or  jugador.collides(bloques,direction) or jugador.collides(agujeros,direction)  or dontMove):
                             coinCollitions(direction)
                             jugador.move(direction)
                             caminarSound.play()
@@ -256,11 +277,12 @@ def main():
     pygame.quit()
 
 def actualizarGameObjects():
-    global bloques, cajas, coins, enemigos, escaleras, jugador, tienda
+    global bloques, cajas, coins, enemigos, escaleras, jugador, tienda, agujeros
     bloques =game.bloques
     cajas =game.cajas
     coins= game.coins
     enemigos = game.enemigos
+    agujeros = game.agujeros
     escaleras[1]= game.escaleraAbajo
     escaleras[0] = game.escaleraArriba
     tienda=game.tienda
@@ -331,6 +353,8 @@ def updateWindow():
             coin.draw(SCREEN)
         for enemigo in enemigos:
             enemigo.draw(SCREEN)
+        for agujero in agujeros:
+            agujero.draw(SCREEN)
 
         for escalera in escaleras:
             try:
