@@ -1,5 +1,5 @@
 import pygame
-from classes import Vector2, screenWidth, screenHeight, tile_size, tile_quantity, Jugador, Block, Caja, Coin, Game, Enemigo
+from classes import Vector2, screenWidth, screenHeight, tile_size, tile_quantity, Block, Game
 
 
 pygame.init()
@@ -20,39 +20,7 @@ caminarSound = pygame.mixer.Sound('Sounds/caminar.mp3')
 coinSound = pygame.mixer.Sound('Sounds/coin.mp3')
 
 
-# jugador = Jugador(1,1)
 game = Game()
-
-
-nivel1 = [
-    [0,0,0,0,0,0,6,0,0,0,0,4],
-    [4,0,0,0,2,2,2,0,0,0,0,0],
-    [4,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,4,0,0,0,0,5,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,4,0,4],
-    [4,0,0,3,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,4,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,5,0,0,0,0],
-    [0,0,0,2,0,0,0,0,3,0,0,0],
-    [0,0,0,0,0,3,0,0,0,0,0,0],
-    [0,0,4,0,0,0,0,0,4,0,0,0],
-    [0,0,0,0,3,0,0,0,1,0,0,5]
-]
-nivel2 = [
-    [0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,5,0,0,0,0,0,0,0],
-    [0,0,0,2,5,2,0,0,0,0,0,0],
-    [0,0,0,2,0,2,0,0,0,0,0,0],
-    [2,2,2,2,0,2,2,0,0,0,0,0],
-    [0,1,0,0,0,0,0,2,0,0,0,0]
-]
-
 game.crearNivel()
 
 bloques =game.bloques
@@ -148,7 +116,7 @@ def main():
                         dontMove=False
                         for caja in cajas:
                             if jugador.collides(caja,direction):
-                                if  ( caja.collides([bloques,cajas,coins,enemigos,escaleras],direction) or caja.position.x < tile_size ):
+                                if  ( caja.collides([bloques,cajas,coins,enemigos,escaleras,tienda],direction) or caja.position.x < tile_size ):
                                     dontMove = True
                                 else:
                                     cords=caja.cords
@@ -180,7 +148,7 @@ def main():
                         dontMove=False
                         for caja in cajas:
                             if jugador.collides(caja,direction):
-                                if  (caja.position.x + caja.width + tile_size  > screenWidth  or caja.collides([bloques,cajas,coins,enemigos,escaleras],direction) ):
+                                if  (caja.position.x + caja.width + tile_size  > screenWidth  or caja.collides([bloques,cajas,coins,enemigos,escaleras,tienda],direction) ):
                                     dontMove=True
                                 else:
                                     cords=caja.cords
@@ -212,7 +180,7 @@ def main():
                         dontMove=False
                         for caja in cajas:
                             if jugador.collides(caja,direction):
-                                if  (caja.position.y - tile_size < jugador.offset  or  caja.collides([bloques,cajas,coins,enemigos,escaleras],direction) ):
+                                if  (caja.position.y - tile_size < jugador.offset  or  caja.collides([bloques,cajas,coins,enemigos,escaleras,tienda],direction) ):
                                     dontMove=True
                                 else:
                                     cords=caja.cords
@@ -244,7 +212,7 @@ def main():
 
                         for caja in cajas:
                             if jugador.collides(caja,direction):
-                                if  (caja.position.y + tile_size >= screenHeight or  caja.collides([bloques,cajas,coins,enemigos,escaleras],direction) ):
+                                if  (caja.position.y + tile_size >= screenHeight or  caja.collides([bloques,cajas,coins,enemigos,escaleras,tienda],direction) ):
                                     dontMove=True
                                 else:
                                     cords=caja.cords
