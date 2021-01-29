@@ -164,6 +164,7 @@ def main():
                                         caja.move(direction)
                         if not dontMove:
                             dontMove= escaleraCollitions(direction)
+                            
 
                         if jugador.collides(tienda,direction):
                             dontMove=True
@@ -272,6 +273,7 @@ def main():
             game.restart()
             actualizarGameObjects()
             
+            
         updateWindow()
 
     pygame.quit()
@@ -302,11 +304,23 @@ def escaleraCollitions(direction):
                 game.niveles[game.nivel+1][y][x]=1
                 game.subir()
                 actualizarGameObjects()
+
+                deadText = font.render('Subiendo ', 1 ,(0,0,0) , (200,200,200))
+                WINDOW.blit(deadText,((screenWidth+300)/2 ,screenHeight/2 ))
+
+                pygame.display.update()
+                pygame.time.delay(1000)
                 return True
             else:
                 game.niveles[game.nivel-1][y][x]=1
                 game.bajar()
                 actualizarGameObjects()
+
+                deadText = font.render('Bajando ', 1 ,(0,0,0) , (200,200,200))
+                WINDOW.blit(deadText,((screenWidth+300)/2 ,screenHeight/2 ))
+                
+                pygame.display.update()
+                pygame.time.delay(1000)
                 return True
     return False
 def coinCollitions(direction):
@@ -341,6 +355,8 @@ def updateWindow():
     SCREEN.fill((100,0,100))
 
     if not game.pause:
+        
+        
         for i in range(1,tile_quantity):
             pygame.draw.line(SCREEN,(0,0,0),(0,i*50),(screenWidth,i*50))
             pygame.draw.line(SCREEN,(0,0,0),(i*50,0),(i*50,screenHeight))
@@ -381,6 +397,7 @@ def updateWindow():
     WINDOW.blit(healthText,(10,50))
     WINDOW.blit(attackText,(10,90))
     WINDOW.blit(defenseText,(10,130))
+
 
     pygame.display.update()
 if __name__ == "__main__":
