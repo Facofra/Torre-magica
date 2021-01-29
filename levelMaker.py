@@ -1,5 +1,5 @@
 import pygame
-from classes import Vector2, screenWidth, screenHeight, tile_size, tile_quantity, Block, Game, Enemigo, Escalera, Caja, Coin, Tienda
+from classes import Vector2, screenWidth, screenHeight, tile_size, tile_quantity, Block, Game, Enemigo, Escalera, Caja, Coin, Tienda, Agujero
 
 
 pygame.init()
@@ -49,6 +49,7 @@ cajas =game.cajas
 coins= game.coins
 enemigos = game.enemigos
 escaleras = [game.escaleraArriba, game.escaleraAbajo]
+agujeros = game.agujeros
 tienda = game.tienda
 menu = game.menu
 jugador=game.jugador
@@ -91,7 +92,11 @@ def ponerObjeto(numObjeto,x,y):
 
         tienda=Tienda(x,y)
         mapa[y][x] = numObjeto
-    
+    elif numObjeto == 9:
+        agujeros.append(Agujero(x,y))
+        mapa[y][x] = numObjeto
+
+
 def quitarObjeto(x,y):
     global tienda
     numObjeto = mapa[y][x]
@@ -140,6 +145,13 @@ def quitarObjeto(x,y):
             tienda = None
             mapa[y][x] = 0
 
+    elif numObjeto == 9:
+
+        for i in range(len(agujeros)):
+            if agujeros[i].cords == Vector2(x,y):
+                agujeros.pop(i)
+                mapa[y][x] = 0
+                break
 
 
 def main():
@@ -170,7 +182,7 @@ def main():
                 elif event.button==3:
                     quitarObjeto(x,y)
                 elif event.button==4:
-                    if numObjeto < 8:
+                    if numObjeto < 9:
                         numObjeto+=1
                 elif event.button==5:
                     if numObjeto > 2:
@@ -191,7 +203,7 @@ def main():
                             print(",")
                     print("\n]")
                 elif event.key == pygame.K_w:
-                    if numObjeto < 8:
+                    if numObjeto < 9:
                         numObjeto+=1
                 elif event.key == pygame.K_s:
                     if numObjeto > 2:
@@ -226,6 +238,8 @@ def updateWindow(numObjeto):
         coin.draw(SCREEN)
     for enemigo in enemigos:
         enemigo.draw(SCREEN)
+    for agujero in agujeros:
+        agujero.draw(SCREEN)
 
     for escalera in escaleras:
         try:
@@ -257,6 +271,12 @@ def updateWindow(numObjeto):
     elif numObjeto == 8:
         
         objeto= "tienda"
+    elif numObjeto == 9:
+        
+        objeto= "agujero"
+
+
+
     goldText = font.render(objeto , 1 , (255,255,255))
 
     WINDOW.blit(goldText,(10,10))
