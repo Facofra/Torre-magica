@@ -7,7 +7,6 @@ tile_quantity=12
 screenWidth = tile_size * tile_quantity
 screenHeight = tile_size * tile_quantity
 
-enemy1 = pygame.image.load('images/enemy1.png')
 
 class Game:
     def __init__(self):
@@ -26,46 +25,46 @@ class Game:
         self.nivel = 0
         self.niveles=[
 [
-        [4,4,5,4,4,4,0,0,2,5,0,6],
-        [4,3,0,0,2,2,2,5,2,0,2,0],
-        [5,0,2,2,0,0,0,0,2,0,2,0],
+        [4,4,50,4,4,4,0,0,2,50,0,6],
+        [4,3,0,0,2,2,2,50,2,0,2,0],
+        [50,0,2,2,0,0,0,0,2,0,2,0],
         [4,0,2,2,0,0,0,0,2,0,2,4],
-        [4,2,4,4,2,0,0,0,2,0,2,5],
-        [4,2,5,5,2,2,0,2,2,0,2,4],
-        [0,0,0,0,0,0,4,0,0,0,2,5],
+        [4,2,4,4,2,0,0,0,2,0,2,50],
+        [4,2,50,50,2,2,0,2,2,0,2,4],
+        [0,0,0,0,0,0,4,0,0,0,2,50],
         [0,0,0,0,2,2,0,2,2,0,0,0],
         [2,2,2,2,2,0,0,0,2,2,2,2],
         [0,0,0,3,0,0,9,0,3,0,0,4],
-        [0,1,0,0,2,0,0,0,2,4,4,5],
-        [0,0,0,0,2,0,0,0,2,4,5,4]
+        [0,1,0,0,2,0,0,0,2,4,4,51],
+        [0,0,0,0,2,0,0,0,2,4,52,4]
 ],
 [
         [4,0,0,2,0,0,0,0,3,0,0,7],
         [0,2,0,0,2,0,2,2,2,2,0,0],
         [0,2,2,0,0,0,2,0,0,0,2,0],
         [0,2,4,2,2,2,0,0,2,0,2,3],
-        [0,2,5,0,0,0,0,2,0,0,2,6],
+        [0,2,50,0,0,0,0,2,0,0,2,6],
         [0,0,2,2,0,2,2,0,0,2,0,0],
         [2,3,0,0,0,0,2,0,2,0,0,2],
         [4,0,2,2,2,0,2,0,0,0,2,4],
         [0,2,2,0,0,0,2,0,0,2,4,4],
-        [0,0,0,0,2,0,2,0,0,5,3,2],
-        [0,2,2,5,2,0,2,0,0,0,0,0],
-        [5,0,4,4,2,9,3,5,0,2,0,8]
+        [0,0,0,0,2,0,2,0,0,50,3,2],
+        [0,2,2,50,2,0,2,0,0,0,0,0],
+        [50,0,4,4,2,9,3,50,0,2,0,8]
 ],
 [
         [2,2,2,2,2,2,2,2,2,2,2,2],
-        [0,0,0,0,2,6,5,0,2,4,4,4],
-        [0,2,0,2,4,2,0,5,0,2,4,4],
-        [0,0,3,4,5,4,2,0,5,0,2,0],
-        [0,2,5,2,0,2,0,2,0,2,0,7],
+        [0,0,0,0,2,6,50,0,2,4,4,4],
+        [0,2,0,2,4,2,0,50,0,2,4,4],
+        [0,0,3,4,50,4,2,0,50,0,2,0],
+        [0,2,50,2,0,2,0,2,0,2,0,7],
         [0,0,0,0,0,0,0,0,9,0,2,0],
         [0,0,0,2,2,2,2,2,2,2,2,0],
-        [0,2,0,0,9,5,3,0,0,0,0,0],
+        [0,2,0,0,9,50,3,0,0,0,0,0],
         [0,0,0,2,0,0,0,0,2,0,2,2],
-        [0,2,0,2,2,2,2,2,2,0,5,4],
-        [0,0,0,0,0,0,0,0,2,5,5,5],
-        [0,2,0,2,0,2,0,0,2,4,5,4]
+        [0,2,0,2,2,2,2,2,2,0,50,4],
+        [0,0,0,0,0,0,0,0,2,50,50,50],
+        [0,2,0,2,0,2,0,0,2,4,50,4]
 ],
 [
         [0,0,0,0,0,0,0,0,0,0,0,0],
@@ -79,7 +78,7 @@ class Game:
         [4,0,0,0,0,4,0,4,0,4,4,0],
         [4,0,0,0,0,4,0,4,0,0,4,0],
         [3,3,3,3,3,3,3,3,3,3,3,3],
-        [5,5,5,5,5,5,5,5,5,5,5,5]
+        [50,50,50,50,50,50,50,50,50,50,50,50]
 ]
 
         ]
@@ -105,10 +104,48 @@ class Game:
                     x=j
                     y=i
                     self.gameObjects["coins"].append(Coin(x,y))
-                elif nivel[i][j] == 5:
+                elif nivel[i][j] == 50:
                     x=j
                     y=i
-                    self.gameObjects["enemigos"].append(Enemigo(x,y))
+                    enemigo = Enemigo(x,y,0)
+                    enemigo.crearStats()
+                    self.gameObjects["enemigos"].append(enemigo)
+                    
+                elif nivel[i][j] == 51:
+                    x=j
+                    y=i
+                    enemigo = Enemigo(x,y,1)
+                    enemigo.crearStats()
+                    self.gameObjects["enemigos"].append(enemigo)
+                    
+                elif nivel[i][j] == 52:
+                    x=j
+                    y=i
+                    enemigo = Enemigo(x,y,2)
+                    enemigo.crearStats()
+                    self.gameObjects["enemigos"].append(enemigo)
+                    
+                elif nivel[i][j] == 53:
+                    x=j
+                    y=i
+                    enemigo = Enemigo(x,y,3)
+                    enemigo.crearStats()
+                    self.gameObjects["enemigos"].append(enemigo)
+                    
+                elif nivel[i][j] == 54:
+                    x=j
+                    y=i
+                    enemigo = Enemigo(x,y,1)
+                    enemigo.crearStats()
+                    self.gameObjects["enemigos"].append(enemigo)
+                    
+                elif nivel[i][j] == 55:
+                    x=j
+                    y=i
+                    enemigo = Enemigo(x,y,5)
+                    enemigo.crearStats()
+                    self.gameObjects["enemigos"].append(enemigo)
+                    
                 elif nivel[i][j] == 6:
                     x=j
                     y=i
@@ -171,7 +208,7 @@ class Jugador:
         self.color =  (255, 101, 68)
         self.vel = tile_size
         self.facing = "right"
-        self.health=20
+        self.health=30
         self.attack = 1
         self.defense = 1
         self.gold=0
@@ -289,21 +326,60 @@ class Coin:
         pygame.draw.circle(SCREEN,self.color, self.position, 10 )
 
 class Enemigo:
-    def __init__(self,x,y):
+    def __init__(self,x,y,numEnemigo):
         self.cords =Vector2(x,y)
         self.offset=9
         self.position = Vector2(self.cords.x * tile_size  + self.offset,self.cords.y * tile_size + self.offset)
         self.width= tile_size - self.offset*2
         self.height= tile_size - self.offset*2
-        self.color =  (255, 101, 68)
-        self.vel = tile_size
+        self.numEnemigo=numEnemigo
         self.health=3
         self.attack = 3
         self.defense = 0
         self.gold=1
+        self.sprites=[
+            pygame.image.load('images/enemy1.png'),
+            pygame.image.load('images/enemy2.png'),
+            pygame.image.load('images/enemy3.png'),
+            pygame.image.load('images/enemy4.png'),
+            pygame.image.load('images/enemy5.png'),
+            pygame.image.load('images/enemy6.png')
+        ]
         
+    def crearStats(self):
+        if self.numEnemigo==0:
+            self.health = 3
+            self.attack = 3
+            self.defense = 0
+            self.gold = 1
+        elif self.numEnemigo==1:
+            self.health = 5
+            self.attack = 4
+            self.defense = 1
+            self.gold = 1
+        elif self.numEnemigo==2:
+            self.health = 10
+            self.attack = 4
+            self.defense = 3
+            self.gold = 2
+        elif self.numEnemigo==3:
+            self.health = 10
+            self.attack = 4
+            self.defense = 4
+            self.gold = 4
+        elif self.numEnemigo==4:
+            self.health = 15
+            self.attack = 5
+            self.defense = 5
+            self.gold = 5
+        elif self.numEnemigo==5:
+            self.health = 5
+            self.attack = 10
+            self.defense = 5
+            self.gold = 10
+
     def draw(self,SCREEN):
-        SCREEN.blit(enemy1,self.position)
+        SCREEN.blit(self.sprites[self.numEnemigo],self.position)
 
 class Escalera:
     def __init__(self,x,y,direction):
@@ -335,7 +411,10 @@ class Tienda:
         self.color =  (93, 194, 72)
 
     def draw(self,SCREEN):
+        font = pygame.font.SysFont('papyrus',15,True)
+        shopText = font.render('shop ', 1 , (255,255,255))
         pygame.draw.rect(SCREEN,self.color, (self.position.x,self.position.y,self.width,self.height) )
+        SCREEN.blit(shopText,(self.position.x, self.position.y))
 
 class Agujero:
     def __init__(self,x,y):
