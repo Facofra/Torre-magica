@@ -12,16 +12,17 @@ enemy1 = pygame.image.load('images/enemy1.png')
 class Game:
     def __init__(self):
         self.pause=False
-        self.bloques=[]
-        self.cajas=[]
-        self.coins=[]
-        self.enemigos=[]
-        self.agujeros=[]
-        self.tienda = Tienda(21,21)
         self.jugador=Jugador(20,20)
-        self.escaleraArriba=Escalera(20,20,"up")
-        self.escaleraAbajo=Escalera(20,20,"down")
         self.menu = Menu()
+        self.gameObjects = {
+            "bloques": [],
+            "cajas":[],
+            "coins":[],
+            "enemigos":[],
+            "agujeros":[],
+            "tiendas": [Tienda(21,21)],
+            "escaleras":[Escalera(20,20,"up"), Escalera(20,20,"down")]
+        }
         self.nivel = 0
         self.niveles=[
 [
@@ -95,50 +96,50 @@ class Game:
                 if nivel[i][j] == 2:
                     x=j
                     y=i
-                    self.bloques.append(Block(x,y))
+                    self.gameObjects["bloques"].append(Block(x,y))
                 elif nivel[i][j] == 3:
                     x=j
                     y=i
-                    self.cajas.append(Caja(x,y))
+                    self.gameObjects["cajas"].append(Caja(x,y))
                 elif nivel[i][j] == 4:
                     x=j
                     y=i
-                    self.coins.append(Coin(x,y))
+                    self.gameObjects["coins"].append(Coin(x,y))
                 elif nivel[i][j] == 5:
                     x=j
                     y=i
-                    self.enemigos.append(Enemigo(x,y))
+                    self.gameObjects["enemigos"].append(Enemigo(x,y))
                 elif nivel[i][j] == 6:
                     x=j
                     y=i
-                    self.escaleraArriba=Escalera(x,y,"up")
+                    self.gameObjects["escaleras"][0]=Escalera(x,y,"up")
                 elif nivel[i][j] == 7:
                     x=j
                     y=i
-                    self.escaleraAbajo=Escalera(x,y,"down")
+                    self.gameObjects["escaleras"][1]=Escalera(x,y,"down")
                 elif nivel[i][j] == 8:
                     x=j
                     y=i
-                    self.tienda=Tienda(x,y)
+                    self.gameObjects["tiendas"][0]=Tienda(x,y)
                 elif nivel[i][j] == 9:
                     x=j
                     y=i
-                    self.agujeros.append(Agujero(x,y))
+                    self.gameObjects["agujeros"].append(Agujero(x,y))
 
-                if self.escaleraAbajo==None:
-                    self.escaleraAbajo = Escalera(20,20,"down")
-                if self.escaleraArriba==None:
-                    self.escaleraArriba = Escalera(20,20,"up")
+                if self.gameObjects["escaleras"][1]==None:
+                    self.gameObjects["escaleras"][1] = Escalera(20,20,"down")
+                if self.gameObjects["escaleras"][0]==None:
+                    self.gameObjects["escaleras"][0] = Escalera(20,20,"up")
 
     def vaciarGameObjects(self):
-        self.bloques=[]
-        self.cajas=[]
-        self.coins=[]
-        self.enemigos=[]
-        self.agujeros=[]
-        self.escaleraArriba=None
-        self.escaleraAbajo=None
-        self.tienda = Tienda(21,21)
+        self.gameObjects["bloques"]=[]
+        self.gameObjects["cajas"]=[]
+        self.gameObjects["coins"]=[]
+        self.gameObjects["enemigos"]=[]
+        self.gameObjects["agujeros"]=[]
+        self.gameObjects["escaleras"][0]=None
+        self.gameObjects["escaleras"][1]=None
+        self.gameObjects["tiendas"][0] = Tienda(21,21)
 
     def subir(self):
         self.nivel+=1

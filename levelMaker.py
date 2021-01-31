@@ -33,29 +33,21 @@ newLevel = [
                     [0,0,0,0,0,0,0,0,0,0,0,0] 
                 ]
 
-bloques =game.bloques
-cajas =game.cajas
-coins= game.coins
-enemigos = game.enemigos
-escaleras = [game.escaleraArriba, game.escaleraAbajo]
-agujeros = game.agujeros
-tienda = game.tienda
-menu = game.menu
+
 jugador=game.jugador
 
 def ponerObjeto(numObjeto,x,y):
-    global tienda
     if numObjeto ==2:
-        bloques.append(Block(x,y)) 
+        game.gameObjects["bloques"].append(Block(x,y)) 
         game.niveles[game.nivel][y][x] = numObjeto
     elif numObjeto == 3:
-        cajas.append(Caja(x,y))
+        game.gameObjects["cajas"].append(Caja(x,y))
         game.niveles[game.nivel][y][x] = numObjeto
     elif numObjeto == 4:
-        coins.append(Coin(x,y))
+        game.gameObjects["coins"].append(Coin(x,y))
         game.niveles[game.nivel][y][x] = numObjeto
     elif numObjeto == 5:
-        enemigos.append(Enemigo(x,y))
+        game.gameObjects["enemigos"].append(Enemigo(x,y))
         game.niveles[game.nivel][y][x] = numObjeto
     elif numObjeto == 6:
         for i in range(tile_quantity):
@@ -63,7 +55,7 @@ def ponerObjeto(numObjeto,x,y):
                 if game.niveles[game.nivel][i][j] == numObjeto:
                     game.niveles[game.nivel][i][j] = 0
 
-        escaleras[0]=Escalera(x,y,"up")
+        game.gameObjects["escaleras"][0]=Escalera(x,y,"up")
         game.niveles[game.nivel][y][x] = numObjeto
     elif numObjeto == 7:
         for i in range(tile_quantity):
@@ -71,7 +63,7 @@ def ponerObjeto(numObjeto,x,y):
                 if game.niveles[game.nivel][i][j] == numObjeto:
                     game.niveles[game.nivel][i][j] = 0
 
-        escaleras[1]=Escalera(x,y,"down")
+        game.gameObjects["escaleras"][1]=Escalera(x,y,"down")
         game.niveles[game.nivel][y][x] = numObjeto
     elif numObjeto == 8:
         for i in range(tile_quantity):
@@ -79,66 +71,65 @@ def ponerObjeto(numObjeto,x,y):
                 if game.niveles[game.nivel][i][j] == numObjeto:
                     game.niveles[game.nivel][i][j] = 0
 
-        tienda=Tienda(x,y)
+        game.gameObjects["tiendas"][0]=Tienda(x,y)
         game.niveles[game.nivel][y][x] = numObjeto
     elif numObjeto == 9:
-        agujeros.append(Agujero(x,y))
+        game.gameObjects["agujeros"].append(Agujero(x,y))
         game.niveles[game.nivel][y][x] = numObjeto
 
 
 def quitarObjeto(x,y):
-    global tienda
     numObjeto = game.niveles[game.nivel][y][x]
     if numObjeto ==2:
 
-        for i in range(len(bloques)):
-            if bloques[i].cords == Vector2(x,y):
-                bloques.pop(i)
+        for i in range(len(game.gameObjects["bloques"])):
+            if game.gameObjects["bloques"][i].cords == Vector2(x,y):
+                game.gameObjects["bloques"].pop(i)
                 game.niveles[game.nivel][y][x] = 0
                 break
 
     elif numObjeto == 3:
 
-        for i in range(len(cajas)):
-            if cajas[i].cords == Vector2(x,y):
-                cajas.pop(i)
+        for i in range(len(game.gameObjects["cajas"])):
+            if game.gameObjects["cajas"][i].cords == Vector2(x,y):
+                game.gameObjects["cajas"].pop(i)
                 game.niveles[game.nivel][y][x] = 0
                 break
 
     elif numObjeto == 4:
 
-        for i in range(len(coins)):
-            if coins[i].cords == Vector2(x,y):
-                coins.pop(i)
+        for i in range(len(game.gameObjects["coins"])):
+            if game.gameObjects["coins"][i].cords == Vector2(x,y):
+                game.gameObjects["coins"].pop(i)
                 game.niveles[game.nivel][y][x] = 0
                 break
 
     elif numObjeto == 5:
 
-        for i in range(len(enemigos)):
-            if enemigos[i].cords == Vector2(x,y):
-                enemigos.pop(i)
+        for i in range(len(game.gameObjects["enemigos"])):
+            if game.gameObjects["enemigos"][i].cords == Vector2(x,y):
+                game.gameObjects["enemigos"].pop(i)
                 game.niveles[game.nivel][y][x] = 0
                 break
 
     elif numObjeto == 6:
-        if escaleras[0] is not None and escaleras[0].cords == Vector2(x,y):
-            escaleras[0]=None
+        if game.gameObjects["escaleras"][0] is not None and game.gameObjects["escaleras"][0].cords == Vector2(x,y):
+            game.gameObjects["escaleras"][0]=None
             game.niveles[game.nivel][y][x] = 0
     elif numObjeto == 7:
-        if escaleras[1] is not None and escaleras[1].cords == Vector2(x,y):
-            escaleras[1]=None
+        if game.gameObjects["escaleras"][1] is not None and game.gameObjects["escaleras"][1].cords == Vector2(x,y):
+            game.gameObjects["escaleras"][1]=None
             game.niveles[game.nivel][y][x] = 0
     elif numObjeto == 8:
-        if tienda is not None and tienda.cords == Vector2(x,y):
-            tienda = None
+        if game.gameObjects["tiendas"][0] is not None and game.gameObjects["tiendas"][0].cords == Vector2(x,y):
+            game.gameObjects["tiendas"][0] = None
             game.niveles[game.nivel][y][x] = 0
 
     elif numObjeto == 9:
 
-        for i in range(len(agujeros)):
-            if agujeros[i].cords == Vector2(x,y):
-                agujeros.pop(i)
+        for i in range(len(game.gameObjects["agujeros"])):
+            if game.gameObjects["agujeros"][i].cords == Vector2(x,y):
+                game.gameObjects["agujeros"].pop(i)
                 game.niveles[game.nivel][y][x] = 0
                 break
 
@@ -258,24 +249,12 @@ def updateWindow(numObjeto):
         pygame.draw.line(SCREEN,(0,0,0),(0,i*50),(screenWidth,i*50))
         pygame.draw.line(SCREEN,(0,0,0),(i*50,0),(i*50,screenHeight))
 
-    for block in bloques:
-        block.draw(SCREEN)
-    for caja in cajas:
-        caja.draw(SCREEN)
-    for coin in coins:
-        coin.draw(SCREEN)
-    for enemigo in enemigos:
-        enemigo.draw(SCREEN)
-    for agujero in agujeros:
-        agujero.draw(SCREEN)
-
-    for escalera in escaleras:
-        try:
-            escalera.draw(SCREEN)
-        except:
-            pass
-    if tienda is not None:
-        tienda.draw(SCREEN)
+    for key in game.gameObjects:
+            for objeto in game.gameObjects[key]:
+                try:
+                    objeto.draw(SCREEN)
+                except:
+                    pass
 
     
     if numObjeto ==2:
@@ -317,15 +296,6 @@ def updateWindow(numObjeto):
     pygame.display.update()
 
 def actualizarGameObjects():
-    global bloques, cajas, coins, enemigos, escaleras, jugador, tienda, agujeros
-    bloques =game.bloques
-    cajas =game.cajas
-    coins= game.coins
-    enemigos = game.enemigos
-    agujeros = game.agujeros
-    escaleras[1]= game.escaleraAbajo
-    escaleras[0] = game.escaleraArriba
-    tienda=game.tienda
     jugador=game.jugador
 
 

@@ -1,5 +1,5 @@
 import pygame
-from classes import Vector2, screenWidth, screenHeight, tile_size, tile_quantity, Block, Game
+from classes import Vector2, screenWidth, screenHeight, tile_size, tile_quantity, Game
 
 
 pygame.init()
@@ -21,13 +21,6 @@ coinSound = pygame.mixer.Sound('Sounds/coin.mp3')
 game = Game()
 game.crearNivel()
 
-bloques =game.bloques
-cajas =game.cajas
-coins= game.coins
-enemigos = game.enemigos
-agujeros = game.agujeros
-escaleras = [game.escaleraArriba, game.escaleraAbajo]
-tienda = game.tienda
 menu = game.menu
 jugador=game.jugador
 
@@ -50,8 +43,6 @@ def main():
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
                     game.pause=not game.pause
-                    for agujero in agujeros:
-                        print(agujero)
 
 
 
@@ -59,9 +50,6 @@ def main():
         if keys[pygame.K_ESCAPE]:
             print("Juego terminado")
             run = False
-        
-        # if keys[pygame.K_RETURN]:
-        #     game.pause= not game.pause
 
         
 
@@ -101,19 +89,19 @@ def main():
                         # if jugador.facing == "left":
                         direction = "left"
                         dontMove=False
-
                         dontMove = cajaCollitions(direction)
+
 
                         if not dontMove:
                             dontMove= escaleraCollitions(direction)
 
-                        if jugador.collides(tienda,direction):
+                        if jugador.collides(game.gameObjects["tiendas"],direction):
                             dontMove=True
                             menu.active=True
 
                         if not dontMove:
                             dontMove = enemyCollitions(direction)
-                        if not (jugador.position.x < tile_size or  jugador.collides(bloques,direction) or jugador.collides(agujeros,direction) or dontMove):
+                        if not (jugador.position.x < tile_size or  jugador.collides(game.gameObjects["bloques"],direction) or jugador.collides(game.gameObjects["agujeros"],direction) or dontMove):
                             coinCollitions(direction)
                             jugador.move(direction)
                             caminarSound.play()
@@ -131,13 +119,13 @@ def main():
                             dontMove= escaleraCollitions(direction)
                             
 
-                        if jugador.collides(tienda,direction):
+                        if jugador.collides(game.gameObjects["tiendas"],direction):
                             dontMove=True
                             menu.active=True
 
                         if not dontMove:
                             dontMove = enemyCollitions(direction)
-                        if not (jugador.position.x + jugador.width + tile_size  > screenWidth  or  jugador.collides(bloques,direction) or jugador.collides(agujeros,direction)  or dontMove): 
+                        if not (jugador.position.x + jugador.width + tile_size  > screenWidth  or  jugador.collides(game.gameObjects["bloques"],direction) or jugador.collides(game.gameObjects["agujeros"],direction)  or dontMove): 
                             coinCollitions(direction)
                             jugador.move(direction)
                             caminarSound.play()
@@ -154,13 +142,13 @@ def main():
                         if not dontMove:
                             dontMove= escaleraCollitions(direction)
 
-                        if jugador.collides(tienda,direction):
+                        if jugador.collides(game.gameObjects["tiendas"],direction):
                             dontMove=True
                             menu.active=True
 
                         if not dontMove:
                             dontMove = enemyCollitions(direction)
-                        if not (jugador.position.y - tile_size < jugador.offset  or  jugador.collides(bloques,direction) or jugador.collides(agujeros,direction)  or dontMove):
+                        if not (jugador.position.y - tile_size < jugador.offset  or  jugador.collides(game.gameObjects["bloques"],direction) or jugador.collides(game.gameObjects["agujeros"],direction)  or dontMove):
                             coinCollitions(direction)
                             jugador.move(direction)
                             caminarSound.play()
@@ -176,13 +164,13 @@ def main():
                         if not dontMove:
                             dontMove= escaleraCollitions(direction)
 
-                        if jugador.collides(tienda,direction):
+                        if jugador.collides(game.gameObjects["tiendas"],direction):
                             dontMove=True
                             menu.active=True
 
                         if not dontMove:
                             dontMove = enemyCollitions(direction)
-                        if not (jugador.position.y + tile_size >= screenHeight or  jugador.collides(bloques,direction) or jugador.collides(agujeros,direction)  or dontMove):
+                        if not (jugador.position.y + tile_size >= screenHeight or  jugador.collides(game.gameObjects["bloques"],direction) or jugador.collides(game.gameObjects["agujeros"],direction)  or dontMove):
                             coinCollitions(direction)
                             jugador.move(direction)
                             caminarSound.play()
@@ -201,91 +189,27 @@ def main():
             pygame.time.delay(3000)
 
             game.restart()
-            actualizarGameObjects()
+            actualizarJugador()
             
             
         updateWindow()
 
     pygame.quit()
 
-def actualizarGameObjects():
-    global bloques, cajas, coins, enemigos, escaleras, jugador, tienda, agujeros
-    bloques =game.bloques
-    cajas =game.cajas
-    coins= game.coins
-    enemigos = game.enemigos
-    agujeros = game.agujeros
-    escaleras[1]= game.escaleraAbajo
-    escaleras[0] = game.escaleraArriba
-    tienda=game.tienda
+def actualizarJugador():
+    global jugador
     jugador=game.jugador
 
 
-                
-def escaleraCollitions(direction):
-    for escalera in escaleras:
-        if escalera is not None and jugador.collides(escalera,direction):
-            cords=jugador.cords
-            x= int(cords.x)
-            y= int(cords.y)
-            for i in range(tile_quantity):
-                for j in range(tile_quantity):
-                    if game.niveles[game.nivel][j][i]==1:
-                        game.niveles[game.nivel][j][i]=0
-            if escalera.direction == "up":
-                game.niveles[game.nivel+1][y][x]=1
-                game.subir()
-                actualizarGameObjects()
-
-                deadText = font.render('Subiendo ', 1 ,(0,0,0) , (200,200,200))
-                WINDOW.blit(deadText,((screenWidth+300)/2 ,screenHeight/2 ))
-
-                pygame.display.update()
-                pygame.time.delay(1000)
-                return True
-            else:
-                game.niveles[game.nivel-1][y][x]=1
-                game.bajar()
-                actualizarGameObjects()
-
-                deadText = font.render('Bajando ', 1 ,(0,0,0) , (200,200,200))
-                WINDOW.blit(deadText,((screenWidth+300)/2 ,screenHeight/2 ))
-                
-                pygame.display.update()
-                pygame.time.delay(1000)
-                return True
-    return False
-def coinCollitions(direction):
-    for i in range(len(coins)):
-        if jugador.collides(coins[i],direction):
-            cords=coins[i].cords
-            x= int(cords.x)
-            y= int(cords.y)
-            game.niveles[game.nivel][y][x]=0
-            coins.pop(i)
-            coinSound.play()
-            jugador.gold += 1
-            return True
-    return False
-def enemyCollitions(direction):
-    for i in range(len(enemigos)):
-        if jugador.collides(enemigos[i],direction):
-            jugador.health-= enemigos[i].attack - jugador.defense
-            enemigos[i].health-= jugador.attack - enemigos[i].defense
-            if enemigos[i].health <=0:
-                cords=enemigos[i].cords
-                x= int(cords.x)
-                y= int(cords.y)
-                game.niveles[game.nivel][y][x]=0
-                jugador.gold+= enemigos[i].gold
-                enemigos.pop(i)
-            return True
-    return False
 def cajaCollitions(direction):
-    for i, caja in enumerate(cajas):
+    for i, caja in enumerate(game.gameObjects["cajas"]):
         if jugador.collides(caja,direction):
-            if  ( caja.collides([bloques,cajas,coins,enemigos,escaleras,tienda],direction)):
-                return True
+            
+            for key in game.gameObjects:
+                if key == "agujeros":
+                    continue
+                if caja.collides(game.gameObjects[key],direction):
+                    return True
 
             if  (caja.position.x + caja.width + tile_size  > screenWidth  and direction =="right"  ):
                 return True
@@ -311,18 +235,76 @@ def cajaCollitions(direction):
                 if direction == "down":
                     y+=1
 
-                if caja.collides(agujeros,direction):
-                    cajas.pop(i)
+                if caja.collides(game.gameObjects["agujeros"],direction):
+                    game.gameObjects["cajas"].pop(i)
                     game.niveles[game.nivel][y][x]=0
-                    for i, agujero in enumerate(agujeros):
+                    for i, agujero in enumerate(game.gameObjects["agujeros"]):
                         if agujero.cords == Vector2(x,y):
-                            agujeros.pop(i)
+                            game.gameObjects["agujeros"].pop(i)
                             break
                 else:
                     game.niveles[game.nivel][y][x]=3
                     caja.move(direction)
-    return False
 
+def escaleraCollitions(direction):
+    for escalera in game.gameObjects["escaleras"]:
+        if escalera is not None and jugador.collides(escalera,direction):
+            cords=jugador.cords
+            x= int(cords.x)
+            y= int(cords.y)
+            for i in range(tile_quantity):
+                for j in range(tile_quantity):
+                    if game.niveles[game.nivel][j][i]==1:
+                        game.niveles[game.nivel][j][i]=0
+            if escalera.direction == "up":
+                game.niveles[game.nivel+1][y][x]=1
+                game.subir()
+                actualizarJugador()
+
+                deadText = font.render('Subiendo ', 1 ,(0,0,0) , (200,200,200))
+                WINDOW.blit(deadText,((screenWidth+300)/2 ,screenHeight/2 ))
+
+                pygame.display.update()
+                pygame.time.delay(1000)
+                return True
+            else:
+                game.niveles[game.nivel-1][y][x]=1
+                game.bajar()
+                actualizarJugador()
+
+                deadText = font.render('Bajando ', 1 ,(0,0,0) , (200,200,200))
+                WINDOW.blit(deadText,((screenWidth+300)/2 ,screenHeight/2 ))
+                
+                pygame.display.update()
+                pygame.time.delay(1000)
+                return True
+    return False
+def coinCollitions(direction):
+    for i in range(len(game.gameObjects["coins"])):
+        if jugador.collides(game.gameObjects["coins"][i],direction):
+            cords=game.gameObjects["coins"][i].cords
+            x= int(cords.x)
+            y= int(cords.y)
+            game.niveles[game.nivel][y][x]=0
+            game.gameObjects["coins"].pop(i)
+            coinSound.play()
+            jugador.gold += 1
+            return True
+    return False
+def enemyCollitions(direction):
+    for i in range(len(game.gameObjects["enemigos"])):
+        if jugador.collides(game.gameObjects["enemigos"][i],direction):
+            jugador.health-= game.gameObjects["enemigos"][i].attack - jugador.defense
+            game.gameObjects["enemigos"][i].health-= jugador.attack - game.gameObjects["enemigos"][i].defense
+            if game.gameObjects["enemigos"][i].health <=0:
+                cords=game.gameObjects["enemigos"][i].cords
+                x= int(cords.x)
+                y= int(cords.y)
+                game.niveles[game.nivel][y][x]=0
+                jugador.gold+= game.gameObjects["enemigos"][i].gold
+                game.gameObjects["enemigos"].pop(i)
+            return True
+    return False
 def updateWindow():
     WINDOW.fill((0,0,0))
     WINDOW.blit(SCREEN,(200,0))
@@ -335,24 +317,13 @@ def updateWindow():
             pygame.draw.line(SCREEN,(0,0,0),(0,i*50),(screenWidth,i*50))
             pygame.draw.line(SCREEN,(0,0,0),(i*50,0),(i*50,screenHeight))
 
-        for block in bloques:
-            block.draw(SCREEN)
-        for caja in cajas:
-            caja.draw(SCREEN)
-        for coin in coins:
-            coin.draw(SCREEN)
-        for enemigo in enemigos:
-            enemigo.draw(SCREEN)
-        for agujero in agujeros:
-            agujero.draw(SCREEN)
+        for key in game.gameObjects:
+            for objeto in game.gameObjects[key]:
+                try:
+                    objeto.draw(SCREEN)
+                except:
+                    pass
 
-        for escalera in escaleras:
-            try:
-                escalera.draw(SCREEN)
-            except:
-                pass
-        if tienda is not None:
-            tienda.draw(SCREEN)
         if menu.active:
             menu.draw(SCREEN)
         
