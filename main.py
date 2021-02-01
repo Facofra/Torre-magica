@@ -308,7 +308,7 @@ def enemyCollitions(direction):
 def updateWindow():
     WINDOW.fill((0,0,0))
     WINDOW.blit(SCREEN,(200,0))
-    SCREEN.fill((100,0,100))
+    SCREEN.fill((129, 129, 129))
 
     if not game.pause:
         

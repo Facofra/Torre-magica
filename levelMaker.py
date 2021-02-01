@@ -46,8 +46,23 @@ def ponerObjeto(numObjeto,x,y):
     elif numObjeto == 4:
         game.gameObjects["coins"].append(Coin(x,y))
         game.niveles[game.nivel][y][x] = numObjeto
-    elif numObjeto == 5:
-        game.gameObjects["enemigos"].append(Enemigo(x,y))
+    elif numObjeto == 50:
+        game.gameObjects["enemigos"].append(Enemigo(x,y,0))
+        game.niveles[game.nivel][y][x] = numObjeto
+    elif numObjeto == 51:
+        game.gameObjects["enemigos"].append(Enemigo(x,y,1))
+        game.niveles[game.nivel][y][x] = numObjeto
+    elif numObjeto == 52:
+        game.gameObjects["enemigos"].append(Enemigo(x,y,2))
+        game.niveles[game.nivel][y][x] = numObjeto
+    elif numObjeto == 53:
+        game.gameObjects["enemigos"].append(Enemigo(x,y,3))
+        game.niveles[game.nivel][y][x] = numObjeto
+    elif numObjeto == 54:
+        game.gameObjects["enemigos"].append(Enemigo(x,y,4))
+        game.niveles[game.nivel][y][x] = numObjeto
+    elif numObjeto == 55:
+        game.gameObjects["enemigos"].append(Enemigo(x,y,5))
         game.niveles[game.nivel][y][x] = numObjeto
     elif numObjeto == 6:
         for i in range(tile_quantity):
@@ -104,7 +119,7 @@ def quitarObjeto(x,y):
                 game.niveles[game.nivel][y][x] = 0
                 break
 
-    elif numObjeto == 5:
+    elif numObjeto >= 50 and numObjeto <60:
 
         for i in range(len(game.gameObjects["enemigos"])):
             if game.gameObjects["enemigos"][i].cords == Vector2(x,y):
@@ -164,9 +179,21 @@ def main():
                 elif event.button==3:
                     quitarObjeto(x,y)
                 elif event.button==4:
-                    if numObjeto < 9:
+
+                    if numObjeto==4:
                         numObjeto+=1
+                    if numObjeto==9:
+                        numObjeto=49
+
+                    if numObjeto < 55:
+                        numObjeto+=1
+
                 elif event.button==5:
+
+                    if numObjeto== 6:
+                        numObjeto-=1
+                    if numObjeto== 50:
+                        numObjeto=10
                     if numObjeto > 2:
                         numObjeto-= 1
 
@@ -206,9 +233,18 @@ def main():
 
 
                 elif event.key == pygame.K_w:
-                    if numObjeto < 9:
+                    if numObjeto==4:
+                        numObjeto+=1
+                    if numObjeto==9:
+                        numObjeto=49
+
+                    if numObjeto < 55:
                         numObjeto+=1
                 elif event.key == pygame.K_s:
+                    if numObjeto== 6:
+                        numObjeto-=1
+                    if numObjeto== 50:
+                        numObjeto=10
                     if numObjeto > 2:
                         numObjeto-= 1
 
@@ -243,7 +279,7 @@ def updateWindow(numObjeto):
 
     WINDOW.fill((0,0,0))
     WINDOW.blit(SCREEN,(200,0))
-    SCREEN.fill((100,0,100))
+    SCREEN.fill((129, 129, 129))
     
     for i in range(1,tile_quantity):
         pygame.draw.line(SCREEN,(0,0,0),(0,i*50),(screenWidth,i*50))
@@ -266,9 +302,24 @@ def updateWindow(numObjeto):
     elif numObjeto == 4:
         
         objeto= "coins"
-    elif numObjeto == 5:
+    elif numObjeto == 50:
         
-        objeto= "enemigos"
+        objeto= "enemigo1"
+    elif numObjeto == 51:
+        
+        objeto= "enemigo2"
+    elif numObjeto == 52:
+        
+        objeto= "enemigo3"
+    elif numObjeto == 53:
+        
+        objeto= "enemigo4"
+    elif numObjeto == 54:
+        
+        objeto= "enemigo5"
+    elif numObjeto == 55:
+        
+        objeto= "enemigo6"
     elif numObjeto == 6:
         
         objeto= "escalera Arriba"
