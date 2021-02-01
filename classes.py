@@ -152,7 +152,7 @@ class Jugador:
         self.color =  (255, 101, 68)
         self.vel = tile_size
         self.facing = "right"
-        self.health=40
+        self.health=50
         self.attack = 1
         self.defense = 1
         self.gold=0
@@ -313,12 +313,12 @@ class Enemigo:
             self.gold = 4
         elif self.numEnemigo==4:
             self.health = 10
-            self.attack = 5
+            self.attack = 6
             self.defense = 5
             self.gold = 5
         elif self.numEnemigo==5:
             self.health = 5
-            self.attack = 6
+            self.attack = 7
             self.defense = 5
             self.gold = 10
 

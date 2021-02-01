@@ -71,7 +71,7 @@ def main():
                         if event.key == pygame.K_SPACE:
                             if jugador.gold >= 10:
                                 if menu.arrowPosition ==0:
-                                    jugador.health+=10
+                                    jugador.health+=20
                                 if menu.arrowPosition ==menu.textHeight *2:
                                     jugador.attack+=1
                                 if menu.arrowPosition ==menu.textHeight *4:
@@ -85,97 +85,24 @@ def main():
             else:
                 if movementAvailable==0:
                     movementAvailable=5
+                    
                     if (keys[pygame.K_LEFT] or keys[pygame.K_a]):
-                        # if jugador.facing == "left":
                         direction = "left"
-                        dontMove=False
-                        dontMove = cajaCollitions(direction)
-
-
-                        if not dontMove:
-                            dontMove= escaleraCollitions(direction)
-
-                        if jugador.collides(game.gameObjects["tiendas"],direction):
-                            dontMove=True
-                            menu.active=True
-
-                        if not dontMove:
-                            dontMove = enemyCollitions(direction)
-                        if not (jugador.position.x < tile_size or  jugador.collides(game.gameObjects["bloques"],direction) or jugador.collides(game.gameObjects["agujeros"],direction) or dontMove):
-                            coinCollitions(direction)
-                            jugador.move(direction)
-                            caminarSound.play()
-                        # else:
-                        
-                        jugador.facing=direction
+                        moveAndCollitions(direction)
                         
                     if (keys[pygame.K_RIGHT] or keys[pygame.K_d]):
-                        # if jugador.facing=="right":
                         direction = "right"
-                        dontMove=False
-                        dontMove = cajaCollitions(direction)
-
-                        if not dontMove:
-                            dontMove= escaleraCollitions(direction)
-                            
-
-                        if jugador.collides(game.gameObjects["tiendas"],direction):
-                            dontMove=True
-                            menu.active=True
-
-                        if not dontMove:
-                            dontMove = enemyCollitions(direction)
-                        if not (jugador.position.x + jugador.width + tile_size  > screenWidth  or  jugador.collides(game.gameObjects["bloques"],direction) or jugador.collides(game.gameObjects["agujeros"],direction)  or dontMove): 
-                            coinCollitions(direction)
-                            jugador.move(direction)
-                            caminarSound.play()
-
-                        # else:
-                        jugador.facing=direction
+                        moveAndCollitions(direction)
                         
                     if (keys[pygame.K_UP] or keys[pygame.K_w]):
-                        # if jugador.facing=="up":
                         direction = "up"
-                        dontMove=False
-                        dontMove = cajaCollitions(direction)
-
-                        if not dontMove:
-                            dontMove= escaleraCollitions(direction)
-
-                        if jugador.collides(game.gameObjects["tiendas"],direction):
-                            dontMove=True
-                            menu.active=True
-
-                        if not dontMove:
-                            dontMove = enemyCollitions(direction)
-                        if not (jugador.position.y - tile_size < jugador.offset  or  jugador.collides(game.gameObjects["bloques"],direction) or jugador.collides(game.gameObjects["agujeros"],direction)  or dontMove):
-                            coinCollitions(direction)
-                            jugador.move(direction)
-                            caminarSound.play()
-                        # else:
-                        jugador.facing=direction
+                        moveAndCollitions(direction)
+                        
                         
                     if (keys[pygame.K_DOWN] or keys[pygame.K_s]):
-                        # if jugador.facing=="down":
                         direction = "down"
-                        dontMove=False
-                        dontMove = cajaCollitions(direction)
-
-                        if not dontMove:
-                            dontMove= escaleraCollitions(direction)
-
-                        if jugador.collides(game.gameObjects["tiendas"],direction):
-                            dontMove=True
-                            menu.active=True
-
-                        if not dontMove:
-                            dontMove = enemyCollitions(direction)
-                        if not (jugador.position.y + tile_size >= screenHeight or  jugador.collides(game.gameObjects["bloques"],direction) or jugador.collides(game.gameObjects["agujeros"],direction)  or dontMove):
-                            coinCollitions(direction)
-                            jugador.move(direction)
-                            caminarSound.play()
-                        # else:
-                        jugador.facing=direction
+                        moveAndCollitions(direction)
+                        
                 else:
                     movementAvailable-=1
         
@@ -245,6 +172,34 @@ def cajaCollitions(direction):
                 else:
                     game.niveles[game.nivel][y][x]=3
                     caja.move(direction)
+def moveAndCollitions(direction):
+    global jugador
+    dontMove=False
+    dontMove = cajaCollitions(direction)
+
+
+    if not dontMove:
+        dontMove= escaleraCollitions(direction)
+
+    if jugador.collides(game.gameObjects["tiendas"],direction):
+        dontMove=True
+        menu.active=True
+
+    if not dontMove:
+        dontMove = enemyCollitions(direction)
+
+    # collide with walls
+    if (jugador.position.x < tile_size and direction=="left") or (jugador.position.x + jugador.width + tile_size  > screenWidth and direction=="right") or (jugador.position.y - tile_size < jugador.offset and direction=="up")  or (jugador.position.y + tile_size >= screenHeight and direction== "down"):
+        dontMove=True
+
+    if not (jugador.collides(game.gameObjects["bloques"],direction) or jugador.collides(game.gameObjects["agujeros"],direction) or dontMove):
+        
+        coinCollitions(direction)
+        jugador.move(direction)
+        caminarSound.play()
+    
+    
+    jugador.facing=direction
 
 def escaleraCollitions(direction):
     for escalera in game.gameObjects["escaleras"]:
