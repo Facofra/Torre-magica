@@ -17,6 +17,8 @@ littleFont = pygame.font.SysFont('papyrus',12,True)
 # SONIDOS
 caminarSound = pygame.mixer.Sound('Sounds/caminar.mp3')
 coinSound = pygame.mixer.Sound('Sounds/coin.mp3')
+golpeSound = pygame.mixer.Sound('Sounds/golpe.mp3')
+deadEnemySound = pygame.mixer.Sound('Sounds/deadEnemy.mp3')
 
 
 game = Game()
@@ -251,6 +253,7 @@ def coinCollitions(direction):
 def enemyCollitions(direction):
     for i in range(len(game.gameObjects["enemigos"])):
         if jugador.collides(game.gameObjects["enemigos"][i],direction):
+            golpeSound.play()
             jugador.health-= game.gameObjects["enemigos"][i].attack - jugador.defense
             game.gameObjects["enemigos"][i].health-= jugador.attack - game.gameObjects["enemigos"][i].defense
             if game.gameObjects["enemigos"][i].health <=0:
@@ -275,6 +278,7 @@ def enemyCollitions(direction):
                 game.niveles[game.nivel][y][x]=0
                 jugador.gold+= game.gameObjects["enemigos"][i].gold
                 game.gameObjects["enemigos"].pop(i)
+                deadEnemySound.play()
             return True
     return False
 def updateWindow():
