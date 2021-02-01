@@ -298,27 +298,27 @@ class Enemigo:
             self.gold = 1
         elif self.numEnemigo==1:
             self.health = 4
-            self.attack = 4
+            self.attack = 3
             self.defense = 1
             self.gold = 2
         elif self.numEnemigo==2:
             self.health = 10
             self.attack = 4
             self.defense = 3
-            self.gold = 2
+            self.gold = 3
         elif self.numEnemigo==3:
             self.health = 10
             self.attack = 4
             self.defense = 4
             self.gold = 4
         elif self.numEnemigo==4:
-            self.health = 15
+            self.health = 10
             self.attack = 5
             self.defense = 5
             self.gold = 5
         elif self.numEnemigo==5:
             self.health = 5
-            self.attack = 10
+            self.attack = 6
             self.defense = 5
             self.gold = 10
 

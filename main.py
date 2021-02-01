@@ -310,6 +310,8 @@ def updateWindow():
     WINDOW.blit(SCREEN,(200,0))
     SCREEN.fill((129, 129, 129))
 
+    enemigos= pygame.image.load('images/enemigos.png')
+    WINDOW.blit(enemigos,(0,200))
     if not game.pause:
         
         
