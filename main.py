@@ -11,6 +11,7 @@ pygame.display.set_caption("Test game")
 clock = pygame.time.Clock()
 FPS = 60
 font = pygame.font.SysFont('papyrus',20,True)
+littleFont = pygame.font.SysFont('papyrus',12,True)
 
 
 # SONIDOS
@@ -253,6 +254,20 @@ def enemyCollitions(direction):
             jugador.health-= game.gameObjects["enemigos"][i].attack - jugador.defense
             game.gameObjects["enemigos"][i].health-= jugador.attack - game.gameObjects["enemigos"][i].defense
             if game.gameObjects["enemigos"][i].health <=0:
+
+                if(str(type(game.gameObjects["enemigos"][i])) == "<class 'classes.Enemigo0'>" ):
+                    game.killedEnemies[0] = game.gameObjects["enemigos"][i]
+                elif(str(type(game.gameObjects["enemigos"][i])) == "<class 'classes.Enemigo1'>" ):
+                    game.killedEnemies[1] = game.gameObjects["enemigos"][i]
+                elif(str(type(game.gameObjects["enemigos"][i])) == "<class 'classes.Enemigo2'>" ):
+                    game.killedEnemies[2] = game.gameObjects["enemigos"][i]
+                elif(str(type(game.gameObjects["enemigos"][i])) == "<class 'classes.Enemigo3'>" ):
+                    game.killedEnemies[3] = game.gameObjects["enemigos"][i]
+                elif(str(type(game.gameObjects["enemigos"][i])) == "<class 'classes.Enemigo4'>" ):
+                    game.killedEnemies[4] = game.gameObjects["enemigos"][i]
+                elif(str(type(game.gameObjects["enemigos"][i])) == "<class 'classes.Enemigo5'>" ):
+                    game.killedEnemies[5] = game.gameObjects["enemigos"][i]
+
                 cords=game.gameObjects["enemigos"][i].cords
                 x= int(cords.x)
                 y= int(cords.y)
@@ -262,12 +277,19 @@ def enemyCollitions(direction):
             return True
     return False
 def updateWindow():
-    WINDOW.fill((0,0,0))
+    WINDOW.fill(( 172, 78, 0 ))
     WINDOW.blit(SCREEN,(200,0))
     SCREEN.fill((129, 129, 129))
 
-    
-    # WINDOW.blit(enemigos,(0,200))
+
+    for i in range(len(game.killedEnemies)-1):
+        if game.killedEnemies[i] is not None:
+            enemy = game.killedEnemies[i]
+            WINDOW.blit(enemy.sprite,(0,225 + i*40 ))
+            statsText = littleFont.render('Hp: ' + str(enemy.hp) + '  A: ' + str(enemy.attack) + '  D: ' + str(enemy.defense) + '  G: ' + str(enemy.gold) , 1 , (255,255,255))
+            WINDOW.blit(statsText,(40,225 + i*42 ))
+
+
     if not game.pause:
         
         

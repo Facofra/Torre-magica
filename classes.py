@@ -27,6 +27,8 @@ class Game:
         self.nivel = 0
         self.niveles=TEST_LEVELS
         self.nivelesIntactos = copy.deepcopy(self.niveles)
+        self.killedEnemies=[None] * 6
+
     def crearNivel(self):
         nivel = self.niveles[self.nivel]
         for i in range(len(nivel)):
@@ -131,6 +133,7 @@ class Game:
     def restart(self):
         self.niveles= copy.deepcopy(self.nivelesIntactos)
         self.vaciarGameObjects()
+        self.killedEnemies=[None] * 6
         self.jugador=Jugador(20,20)
         self.nivel=0
         self.crearNivel()
@@ -286,6 +289,7 @@ class Enemigo0(Enemigo):
         self.attack = 3
         self.defense = 0
         self.gold=1
+        self.hp = self.health
         self.sprite= pygame.image.load('images/enemy0.png')
 class Enemigo1(Enemigo):
     def __init__(self,x,y):
@@ -294,6 +298,7 @@ class Enemigo1(Enemigo):
         self.attack = 3
         self.defense = 1
         self.gold = 2
+        self.hp = self.health
         self.sprite= pygame.image.load('images/enemy1.png')
 class Enemigo2(Enemigo):
     def __init__(self,x,y):
@@ -302,6 +307,7 @@ class Enemigo2(Enemigo):
         self.attack = 4
         self.defense = 3
         self.gold = 3
+        self.hp = self.health
         self.sprite= pygame.image.load('images/enemy2.png')
 class Enemigo3(Enemigo):
     def __init__(self,x,y):
@@ -310,6 +316,7 @@ class Enemigo3(Enemigo):
         self.attack = 4
         self.defense = 4
         self.gold = 4
+        self.hp = self.health
         self.sprite= pygame.image.load('images/enemy3.png')
 class Enemigo4(Enemigo):
     def __init__(self,x,y):
@@ -318,6 +325,7 @@ class Enemigo4(Enemigo):
         self.attack = 6
         self.defense = 5
         self.gold = 5
+        self.hp = self.health
         self.sprite= pygame.image.load('images/enemy4.png')
 class Enemigo5(Enemigo):
     def __init__(self,x,y):
@@ -326,6 +334,7 @@ class Enemigo5(Enemigo):
         self.attack = 7
         self.defense = 5
         self.gold = 10
+        self.hp = self.health
         self.sprite= pygame.image.load('images/enemy5.png')
 
 class Escalera:
