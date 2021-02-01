@@ -25,7 +25,7 @@ class Game:
             "escaleras":[Escalera(20,20,"up"), Escalera(20,20,"down")]
         }
         self.nivel = 0
-        self.niveles=TEST_LEVELS
+        self.niveles=LEVELS
         self.nivelesIntactos = copy.deepcopy(self.niveles)
         self.killedEnemies=[None] * 6
 
@@ -313,7 +313,7 @@ class Enemigo3(Enemigo):
     def __init__(self,x,y):
         super().__init__(x,y)
         self.health = 10
-        self.attack = 4
+        self.attack = 5
         self.defense = 4
         self.gold = 4
         self.hp = self.health
@@ -330,7 +330,7 @@ class Enemigo4(Enemigo):
 class Enemigo5(Enemigo):
     def __init__(self,x,y):
         super().__init__(x,y)
-        self.health = 5
+        self.health = 15
         self.attack = 7
         self.defense = 5
         self.gold = 10

@@ -267,6 +267,7 @@ def enemyCollitions(direction):
                     game.killedEnemies[4] = game.gameObjects["enemigos"][i]
                 elif(str(type(game.gameObjects["enemigos"][i])) == "<class 'classes.Enemigo5'>" ):
                     game.killedEnemies[5] = game.gameObjects["enemigos"][i]
+                    
 
                 cords=game.gameObjects["enemigos"][i].cords
                 x= int(cords.x)
@@ -282,10 +283,13 @@ def updateWindow():
     SCREEN.fill((129, 129, 129))
 
 
-    for i in range(len(game.killedEnemies)-1):
+    for i in range(len(game.killedEnemies)):
         if game.killedEnemies[i] is not None:
             enemy = game.killedEnemies[i]
             WINDOW.blit(enemy.sprite,(0,225 + i*40 ))
+            # damage = (enemy.attack - jugador.defense) * ( enemy.hp // (jugador.attack - enemy.defense) + enemy.hp % (jugador.attack - enemy.defense > 0)  )
+            # damage = damage * (damage > 0)
+            # statsText = littleFont.render( 'Dmg: '+str(damage) + '  G: ' + str(enemy.gold) , 1 , (255,255,255))
             statsText = littleFont.render('Hp: ' + str(enemy.hp) + '  A: ' + str(enemy.attack) + '  D: ' + str(enemy.defense) + '  G: ' + str(enemy.gold) , 1 , (255,255,255))
             WINDOW.blit(statsText,(40,225 + i*42 ))
 
