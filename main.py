@@ -85,7 +85,7 @@ def main():
             else:
                 if movementAvailable==0:
                     movementAvailable=5
-                    
+
                     if (keys[pygame.K_LEFT] or keys[pygame.K_a]):
                         direction = "left"
                         moveAndCollitions(direction)
@@ -108,6 +108,7 @@ def main():
         
 
         if jugador.health<=0:
+            jugador.health=0
             updateWindow()
             deadText = font.render('You Dead ', 1 ,(0,0,0) , (255,255,255))
             WINDOW.blit(deadText,((screenWidth+300)/2 ,screenHeight/2 ))
@@ -265,8 +266,8 @@ def updateWindow():
     WINDOW.blit(SCREEN,(200,0))
     SCREEN.fill((129, 129, 129))
 
-    enemigos= pygame.image.load('images/enemigos.png')
-    WINDOW.blit(enemigos,(0,200))
+    
+    # WINDOW.blit(enemigos,(0,200))
     if not game.pause:
         
         

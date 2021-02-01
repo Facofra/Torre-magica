@@ -1,5 +1,5 @@
 import pygame, copy
-from classes import Vector2, screenWidth, screenHeight, tile_size, tile_quantity, Block, Game, Enemigo, Escalera, Caja, Coin, Tienda, Agujero
+from classes import Vector2, screenWidth, screenHeight, tile_size, tile_quantity, Block, Game, Escalera, Caja, Coin, Tienda, Agujero, Enemigo0, Enemigo1,Enemigo2,Enemigo3,Enemigo4,Enemigo5
 
 
 pygame.init()
@@ -47,22 +47,22 @@ def ponerObjeto(numObjeto,x,y):
         game.gameObjects["coins"].append(Coin(x,y))
         game.niveles[game.nivel][y][x] = numObjeto
     elif numObjeto == 50:
-        game.gameObjects["enemigos"].append(Enemigo(x,y,0))
+        game.gameObjects["enemigos"].append(Enemigo0(x,y))
         game.niveles[game.nivel][y][x] = numObjeto
     elif numObjeto == 51:
-        game.gameObjects["enemigos"].append(Enemigo(x,y,1))
+        game.gameObjects["enemigos"].append(Enemigo1(x,y))
         game.niveles[game.nivel][y][x] = numObjeto
     elif numObjeto == 52:
-        game.gameObjects["enemigos"].append(Enemigo(x,y,2))
+        game.gameObjects["enemigos"].append(Enemigo2(x,y))
         game.niveles[game.nivel][y][x] = numObjeto
     elif numObjeto == 53:
-        game.gameObjects["enemigos"].append(Enemigo(x,y,3))
+        game.gameObjects["enemigos"].append(Enemigo3(x,y))
         game.niveles[game.nivel][y][x] = numObjeto
     elif numObjeto == 54:
-        game.gameObjects["enemigos"].append(Enemigo(x,y,4))
+        game.gameObjects["enemigos"].append(Enemigo4(x,y))
         game.niveles[game.nivel][y][x] = numObjeto
     elif numObjeto == 55:
-        game.gameObjects["enemigos"].append(Enemigo(x,y,5))
+        game.gameObjects["enemigos"].append(Enemigo5(x,y))
         game.niveles[game.nivel][y][x] = numObjeto
     elif numObjeto == 6:
         for i in range(tile_quantity):

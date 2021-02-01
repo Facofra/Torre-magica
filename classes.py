@@ -51,43 +51,37 @@ class Game:
                 elif nivel[i][j] == 50:
                     x=j
                     y=i
-                    enemigo = Enemigo(x,y,0)
-                    enemigo.crearStats()
+                    enemigo = Enemigo0(x,y)
                     self.gameObjects["enemigos"].append(enemigo)
                     
                 elif nivel[i][j] == 51:
                     x=j
                     y=i
-                    enemigo = Enemigo(x,y,1)
-                    enemigo.crearStats()
+                    enemigo = Enemigo1(x,y)
                     self.gameObjects["enemigos"].append(enemigo)
                     
                 elif nivel[i][j] == 52:
                     x=j
                     y=i
-                    enemigo = Enemigo(x,y,2)
-                    enemigo.crearStats()
+                    enemigo = Enemigo2(x,y)
                     self.gameObjects["enemigos"].append(enemigo)
                     
                 elif nivel[i][j] == 53:
                     x=j
                     y=i
-                    enemigo = Enemigo(x,y,3)
-                    enemigo.crearStats()
+                    enemigo = Enemigo3(x,y)
                     self.gameObjects["enemigos"].append(enemigo)
                     
                 elif nivel[i][j] == 54:
                     x=j
                     y=i
-                    enemigo = Enemigo(x,y,4)
-                    enemigo.crearStats()
+                    enemigo = Enemigo4(x,y)
                     self.gameObjects["enemigos"].append(enemigo)
                     
                 elif nivel[i][j] == 55:
                     x=j
                     y=i
-                    enemigo = Enemigo(x,y,5)
-                    enemigo.crearStats()
+                    enemigo = Enemigo5(x,y)
                     self.gameObjects["enemigos"].append(enemigo)
                     
                 elif nivel[i][j] == 6:
@@ -270,60 +264,69 @@ class Coin:
         pygame.draw.circle(SCREEN,self.color, self.position, 10 )
 
 class Enemigo:
-    def __init__(self,x,y,numEnemigo):
+    def __init__(self,x,y):
         self.cords =Vector2(x,y)
         self.offset=9
         self.position = Vector2(self.cords.x * tile_size  + self.offset,self.cords.y * tile_size + self.offset)
         self.width= tile_size - self.offset*2
         self.height= tile_size - self.offset*2
-        self.numEnemigo=numEnemigo
+        self.health=0
+        self.attack = 0
+        self.defense = 0
+        self.gold=0
+        
+
+    def draw(self,SCREEN):
+        SCREEN.blit(self.sprite,self.position)
+
+class Enemigo0(Enemigo):
+    def __init__(self,x,y):
+        super().__init__(x,y)
         self.health=3
         self.attack = 3
         self.defense = 0
         self.gold=1
-        self.sprites=[
-            pygame.image.load('images/enemy1.png'),
-            pygame.image.load('images/enemy2.png'),
-            pygame.image.load('images/enemy3.png'),
-            pygame.image.load('images/enemy4.png'),
-            pygame.image.load('images/enemy5.png'),
-            pygame.image.load('images/enemy6.png')
-        ]
-        
-    def crearStats(self):
-        if self.numEnemigo==0:
-            self.health = 3
-            self.attack = 3
-            self.defense = 0
-            self.gold = 1
-        elif self.numEnemigo==1:
-            self.health = 4
-            self.attack = 3
-            self.defense = 1
-            self.gold = 2
-        elif self.numEnemigo==2:
-            self.health = 10
-            self.attack = 4
-            self.defense = 3
-            self.gold = 3
-        elif self.numEnemigo==3:
-            self.health = 10
-            self.attack = 4
-            self.defense = 4
-            self.gold = 4
-        elif self.numEnemigo==4:
-            self.health = 10
-            self.attack = 6
-            self.defense = 5
-            self.gold = 5
-        elif self.numEnemigo==5:
-            self.health = 5
-            self.attack = 7
-            self.defense = 5
-            self.gold = 10
-
-    def draw(self,SCREEN):
-        SCREEN.blit(self.sprites[self.numEnemigo],self.position)
+        self.sprite= pygame.image.load('images/enemy0.png')
+class Enemigo1(Enemigo):
+    def __init__(self,x,y):
+        super().__init__(x,y)
+        self.health = 4
+        self.attack = 3
+        self.defense = 1
+        self.gold = 2
+        self.sprite= pygame.image.load('images/enemy1.png')
+class Enemigo2(Enemigo):
+    def __init__(self,x,y):
+        super().__init__(x,y)
+        self.health = 10
+        self.attack = 4
+        self.defense = 3
+        self.gold = 3
+        self.sprite= pygame.image.load('images/enemy2.png')
+class Enemigo3(Enemigo):
+    def __init__(self,x,y):
+        super().__init__(x,y)
+        self.health = 10
+        self.attack = 4
+        self.defense = 4
+        self.gold = 4
+        self.sprite= pygame.image.load('images/enemy3.png')
+class Enemigo4(Enemigo):
+    def __init__(self,x,y):
+        super().__init__(x,y)
+        self.health = 10
+        self.attack = 6
+        self.defense = 5
+        self.gold = 5
+        self.sprite= pygame.image.load('images/enemy4.png')
+class Enemigo5(Enemigo):
+    def __init__(self,x,y):
+        super().__init__(x,y)
+        self.health = 5
+        self.attack = 7
+        self.defense = 5
+        self.gold = 10
+        self.sprite= pygame.image.load('images/enemy5.png')
 
 class Escalera:
     def __init__(self,x,y,direction):
