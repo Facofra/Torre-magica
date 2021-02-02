@@ -37,6 +37,7 @@ def main():
         clock.tick(FPS)
         keys = pygame.key.get_pressed()
         events = pygame.event.get()
+        
 
         for event in events:
             
@@ -88,23 +89,31 @@ def main():
             else:
                 if movementAvailable==0:
                     movementAvailable=5
+                    moving = False
 
                     if (keys[pygame.K_LEFT] or keys[pygame.K_a]):
                         direction = "left"
                         moveAndCollitions(direction)
+                        moving=True
                         
                     if (keys[pygame.K_RIGHT] or keys[pygame.K_d]):
                         direction = "right"
                         moveAndCollitions(direction)
+                        moving=True
                         
                     if (keys[pygame.K_UP] or keys[pygame.K_w]):
                         direction = "up"
                         moveAndCollitions(direction)
+                        moving=True
                         
                         
                     if (keys[pygame.K_DOWN] or keys[pygame.K_s]):
                         direction = "down"
                         moveAndCollitions(direction)
+                        moving=True
+                    if not moving:
+                        jugador.moving=0
+                        
                         
                 else:
                     movementAvailable-=1
@@ -201,6 +210,11 @@ def moveAndCollitions(direction):
         coinCollitions(direction)
         jugador.move(direction)
         caminarSound.play()
+        if jugador.moving == 0 or jugador.moving== 2:
+            jugador.moving=1
+        else:
+            jugador.moving = 2
+
     
     
     jugador.facing=direction

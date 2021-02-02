@@ -153,7 +153,13 @@ class Jugador:
         self.attack = 1
         self.defense = 1
         self.gold=0
-        self.sprites = [pygame.image.load('images/knight1.png'),pygame.image.load('images/knight2.png'),pygame.image.load('images/knight3.png'),pygame.image.load('images/knight4.png')]
+        self.sprites = {
+            "down": [pygame.image.load('images/knight/knight_01.png'),pygame.image.load('images/knight/knight_02.png'),pygame.image.load('images/knight/knight_03.png')],
+            "up": [pygame.image.load('images/knight/knight_04.png'),pygame.image.load('images/knight/knight_05.png'),pygame.image.load('images/knight/knight_06.png')],
+            "left": [pygame.image.load('images/knight/knight_07.png'), pygame.image.load('images/knight/knight_09.png'), pygame.image.load('images/knight/knight_11.png')],
+            "right": [pygame.image.load('images/knight/knight_08.png'),pygame.image.load('images/knight/knight_10.png'),pygame.image.load('images/knight/knight_12.png')]
+        }
+        self.moving =0
         
         
     def draw(self,SCREEN):
@@ -161,19 +167,19 @@ class Jugador:
 
         if self.facing == "left":
             # pygame.draw.line(SCREEN,(0,0,0),(self.position.x,self.position.y + self.height/2),(self.position.x + self.width/2, self.position.y +self.height/2),2)
-            SCREEN.blit(self.sprites[2],self.position)
+            SCREEN.blit(self.sprites["left"][self.moving],self.position)
 
         elif self.facing == "right":
             # pygame.draw.line(SCREEN,(0,0,0),(self.position.x + self.width/2, self.position.y + self.height/2),( self.position.x + self.width, self.position.y +self.height/2),2)
-            SCREEN.blit(self.sprites[3],self.position)
+            SCREEN.blit(self.sprites["right"][self.moving],self.position)
 
         elif self.facing == "up":
             # pygame.draw.line(SCREEN,(0,0,0),(self.position.x + self.width/2,self.position.y),(self.position.x + self.width/2,self.position.y + self.height/2),2)
-            SCREEN.blit(self.sprites[1],self.position)
+            SCREEN.blit(self.sprites["up"][self.moving],self.position)
 
         elif self.facing == "down":
             # pygame.draw.line(SCREEN,(0,0,0),(self.position.x + self.width/2,self.position.y + self.height/2),(self.position.x + self.width/2,self.position.y + self.height),2)
-            SCREEN.blit(self.sprites[0],self.position)
+            SCREEN.blit(self.sprites["down"][self.moving],self.position)
 
     
     def collides(self,objetos,direction):
