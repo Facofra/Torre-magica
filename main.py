@@ -46,7 +46,7 @@ def main():
 
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
-                    game.pause=not game.pause
+                    game.pause.isPaused = not game.pause.isPaused
 
 
 
@@ -58,7 +58,7 @@ def main():
         
 
 #------------- inputs ----------------------------------------------------
-        if not game.pause:   
+        if not game.pause.isPaused:   
             if menu.active:
                 for event in events:
                     if event.type == pygame.KEYDOWN:
@@ -117,7 +117,37 @@ def main():
                         
                 else:
                     movementAvailable-=1
-        
+        else:
+            for event in events:
+                if event.type == pygame.KEYDOWN:
+                    if (event.key == pygame.K_DOWN or event.key == pygame.K_s):
+                        if game.pause.arrowPosition == 3:
+                            game.pause.arrowPosition=0
+                        else:
+                            game.pause.arrowPosition+=1
+                    if  ( event.key == pygame.K_UP or event.key == pygame.K_w):
+                        if game.pause.arrowPosition == 0:
+                            game.pause.arrowPosition = 3
+                        else:
+                            game.pause.arrowPosition-= 1
+                    if event.key == pygame.K_SPACE:
+                        if game.pause.arrowPosition == 0:
+                            # continue
+                            game.pause.isPaused = False
+                        if game.pause.arrowPosition == 1:
+                            # reset level
+                            game.resetLevel()
+                            game.pause.isPaused = False
+                            
+                        if game.pause.arrowPosition == 2:
+                            # restart game
+                            game.restart()
+                            actualizarJugador()
+                            game.pause.isPaused = False
+                        if game.pause.arrowPosition == 3:
+                            # exit
+                            run = False
+                            
 
         if jugador.health<=0:
             jugador.health=0
@@ -312,7 +342,7 @@ def updateWindow():
             WINDOW.blit(statsText,(40,225 + i*42 ))
 
 
-    if not game.pause:
+    if not game.pause.isPaused:
         
         
         for i in range(1,tile_quantity):
@@ -331,9 +361,7 @@ def updateWindow():
         
         jugador.draw(SCREEN)
     else:
-        pauseText = font.render('Pause ', 1 , (255,255,255))
-        
-        SCREEN.blit(pauseText,(screenWidth/2 - 20,screenHeight/2 - 20))
+        game.pause.draw(SCREEN)
 
 # Textos en el costado
     goldText = font.render('Gold: ' + str(jugador.gold) , 1 , (255,255,255))

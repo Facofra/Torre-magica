@@ -12,8 +12,8 @@ screenHeight = tile_size * tile_quantity
 
 class Game:
     def __init__(self):
-        self.pause=False
         self.jugador=Jugador(20,20)
+        self.pause=Pause()
         self.menu = Menu()
         self.gameObjects = {
             "bloques": [],
@@ -28,6 +28,13 @@ class Game:
         self.niveles=LEVELS
         self.nivelesIntactos = copy.deepcopy(self.niveles)
         self.killedEnemies=[None] * 6
+        self.actualLevel = copy.deepcopy(self.niveles[self.nivel])
+        self.actualLevelJugador = {
+            "health":self.jugador.health,
+            "attack":self.jugador.attack,
+            "defense":self.jugador.defense,
+            "gold":self.jugador.gold,
+        }
 
     def crearNivel(self):
         nivel = self.niveles[self.nivel]
@@ -122,14 +129,14 @@ class Game:
         self.nivel+=1
         self.vaciarGameObjects()
         self.crearNivel()
-        pass
-
+        self.backUpReset()
+        
     def bajar(self):
         self.nivel-=1
         self.vaciarGameObjects()
         self.crearNivel()
-        pass
-
+        self.backUpReset()
+        
     def restart(self):
         self.niveles= copy.deepcopy(self.nivelesIntactos)
         self.vaciarGameObjects()
@@ -137,7 +144,26 @@ class Game:
         self.jugador=Jugador(20,20)
         self.nivel=0
         self.crearNivel()
-        
+        self.backUpReset()
+
+    def backUpReset(self):
+        self.actualLevel = copy.deepcopy(self.niveles[self.nivel])
+        self.actualLevelJugador = {
+            "health":self.jugador.health,
+            "attack":self.jugador.attack,
+            "defense":self.jugador.defense,
+            "gold":self.jugador.gold,
+        }
+
+    def resetLevel(self):
+        self.niveles[self.nivel] = copy.deepcopy(self.actualLevel)
+        self.actualLevelJugador["gold"] -= 1
+        self.jugador.health = self.actualLevelJugador["health"]
+        self.jugador.attack = self.actualLevelJugador["attack"]
+        self.jugador.defense = self.actualLevelJugador["defense"]
+        self.jugador.gold = self.actualLevelJugador["gold"]
+        self.vaciarGameObjects()
+        self.crearNivel()
 
 class Jugador:
     def __init__(self,x,y):
@@ -430,7 +456,11 @@ class Menu:
         self.textHeight=textHeight
         self.textWidth=textWidth
 
-        pygame.draw.polygon(MENU, (0,255,255), [[textWidth+40,textHeight* 2+ 20+ self.arrowPosition], [textWidth+30,textHeight* 2+ 25+ self.arrowPosition], [textWidth+40,textHeight* 2+ 30+ self.arrowPosition]], 0)
+        pygame.draw.polygon(MENU, (0,255,255), [
+            [textWidth+40,textHeight* 2+ 20+ self.arrowPosition],
+            [textWidth+30,textHeight* 2+ 25+ self.arrowPosition],
+            [textWidth+40,textHeight* 2+ 30+ self.arrowPosition]
+              ], 0)
         
         MENU.blit(costText,(10,10))
         MENU.blit(hpText,(10,10 + textHeight *2))
@@ -440,4 +470,38 @@ class Menu:
         MENU.blit(exitText,(10, self.height - textHeight))
         SCREEN.blit(MENU,(self.position.x, self.position.y))
 
+class Pause:
+    def __init__(self):
+        self.arrowPosition=0
+        self.isPaused=False
+        self.x =screenWidth/2 - 100
+        self.y = 150
+        self.separacion = 50
 
+    def draw(self,SCREEN):
+
+        font = pygame.font.SysFont('papyrus',20,True)
+
+        pauseText = font.render('Pause ', 1 , (255,255,255))
+        continueText = font.render('Continue ', 1 , (255,255,255))
+        resetText = font.render('Reset Floor (1 gold cost) ', 1 , (255,255,255))
+        restartText = font.render('Restart ', 1 , (255,255,255))
+        exitText = font.render('Exit Game', 1 , (255,255,255))
+
+        textHeight= resetText.get_height()
+        textWidth= resetText.get_width()
+
+        pygame.draw.polygon(SCREEN, (0,255,255), [
+            [self.x- 35,self.y+ 10+ self.arrowPosition * self.separacion],
+            [self.x- 25,self.y+ 15+ self.arrowPosition * self.separacion],
+            [self.x- 35,self.y+ 20+ self.arrowPosition * self.separacion]
+            ], 0)
+
+        # pygame.draw.rect(SCREEN,(122,11,21), (self.x,20,20,20) )
+        
+        
+        SCREEN.blit(pauseText,(self.x,20))
+        SCREEN.blit(continueText,(self.x,self.y))
+        SCREEN.blit(resetText,(self.x,self.y + self.separacion ))
+        SCREEN.blit(restartText,(self.x,self.y + self.separacion * 2))
+        SCREEN.blit(exitText,(self.x,self.y + self.separacion * 3))
