@@ -243,7 +243,7 @@ class Jugador:
 class Block:
     def __init__(self,x,y):
         self.cords =Vector2(x,y)
-        self.offset=10
+        self.offset=0
         self.position = Vector2(self.cords.x * tile_size  + self.offset,self.cords.y * tile_size + self.offset)
         self.width=tile_size - self.offset*2
         self.height=tile_size - self.offset*2
@@ -256,7 +256,11 @@ class Block:
 class Caja(Block):
     def __init__(self,x,y):
         super().__init__(x,y)
-        self.color = (255,0,0)
+        self.offset=10
+        self.position = Vector2(self.cords.x * tile_size  + self.offset,self.cords.y * tile_size + self.offset)
+        self.width=tile_size - self.offset*2
+        self.height=tile_size - self.offset*2
+        self.sprite = pygame.image.load('images/caja.png')
 
     def move(self,direction):
         if direction == "left":
@@ -295,17 +299,37 @@ class Caja(Block):
         else:
             return self.cords + tupla == objetos.cords
 
+    def draw(self,SCREEN):
+        SCREEN.blit(self.sprite,(self.position.x, self.position.y)) 
+
+
 class Coin:
 
     def __init__(self,x,y):
         self.cords =Vector2(x,y)
-        self.offset=tile_size/2
+        self.offset= 5 # tile_size/2
         self.position = Vector2(self.cords.x * tile_size  + self.offset,self.cords.y * tile_size + self.offset)
         self.width=tile_size - 20
         self.height=tile_size - 20
         self.color =  pygame.color.Color("gold")
+        self.actualSprite=0
+        self.sprites=[
+            pygame.image.load('images/coins/coin0.png'),
+            pygame.image.load('images/coins/coin1.png'),
+            pygame.image.load('images/coins/coin2.png'),
+            pygame.image.load('images/coins/coin3.png'),
+            pygame.image.load('images/coins/coin4.png'),
+            pygame.image.load('images/coins/coin5.png')
+        ]
     def draw(self,SCREEN):
-        pygame.draw.circle(SCREEN,self.color, self.position, 10 )
+        # pygame.draw.circle(SCREEN,self.color, self.position, 10 )
+        SCREEN.blit(self.sprites[self.actualSprite//7],(self.position.x, self.position.y)) 
+        self.actualSprite+=1
+        if self.actualSprite == 42:
+            self.actualSprite=0
+
+
+
 
 class Enemigo:
     def __init__(self,x,y):
@@ -401,17 +425,19 @@ class Escalera:
 class Tienda:
     def __init__(self,x,y):
         self.cords =Vector2(x,y)
-        self.offset=1
+        self.offset=9
         self.position = Vector2(self.cords.x * tile_size  + self.offset,self.cords.y * tile_size + self.offset)
         self.width=tile_size - self.offset*2
         self.height=tile_size - self.offset*2
         self.color =  (93, 194, 72)
+        self.sprite= pygame.image.load('images/shop.png')
 
     def draw(self,SCREEN):
-        font = pygame.font.SysFont('papyrus',15,True)
-        shopText = font.render('shop ', 1 , (255,255,255))
-        pygame.draw.rect(SCREEN,self.color, (self.position.x,self.position.y,self.width,self.height) )
-        SCREEN.blit(shopText,(self.position.x, self.position.y))
+        # font = pygame.font.SysFont('papyrus',15,True)
+        # shopText = font.render('shop ', 1 , (255,255,255))
+        # pygame.draw.rect(SCREEN,self.color, (self.position.x,self.position.y,self.width,self.height) )
+        # SCREEN.blit(shopText,(self.position.x, self.position.y)) 
+        SCREEN.blit(self.sprite,(self.position.x, self.position.y)) 
 
 class Agujero:
     def __init__(self,x,y):
