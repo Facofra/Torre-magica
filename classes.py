@@ -35,6 +35,7 @@ class Game:
             "defense":self.jugador.defense,
             "gold":self.jugador.gold,
         }
+        self.bg = pygame.image.load('images/bg.png')
 
     def crearNivel(self):
         nivel = self.niveles[self.nivel]
@@ -168,7 +169,7 @@ class Game:
 class Jugador:
     def __init__(self,x,y):
         self.cords =Vector2(x,y)
-        self.offset=10
+        self.offset=5
         self.position = Vector2(self.cords.x * tile_size  + self.offset,self.cords.y * tile_size + self.offset)
         self.width= tile_size - self.offset*2
         self.height= tile_size - self.offset*2
@@ -247,11 +248,13 @@ class Block:
         self.position = Vector2(self.cords.x * tile_size  + self.offset,self.cords.y * tile_size + self.offset)
         self.width=tile_size - self.offset*2
         self.height=tile_size - self.offset*2
-        self.color =  ( 203, 203, 225 )
+        # self.color =  ( 180, 180, 205 )
+        self.sprite = pygame.image.load('images/wall.png')
         
 
     def draw(self,SCREEN):
-        pygame.draw.rect(SCREEN,self.color, (self.position.x,self.position.y,self.width,self.height) )
+        # pygame.draw.rect(SCREEN,self.color, (self.position.x,self.position.y,self.width,self.height) )
+        SCREEN.blit(self.sprite,self.position)
 
 class Caja(Block):
     def __init__(self,x,y):
@@ -307,7 +310,7 @@ class Coin:
 
     def __init__(self,x,y):
         self.cords =Vector2(x,y)
-        self.offset= 5 # tile_size/2
+        self.offset= 10 # tile_size/2
         self.position = Vector2(self.cords.x * tile_size  + self.offset,self.cords.y * tile_size + self.offset)
         self.width=tile_size - 20
         self.height=tile_size - 20

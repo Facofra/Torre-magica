@@ -328,7 +328,7 @@ def enemyCollitions(direction):
 def updateWindow():
     WINDOW.fill(( 172, 78, 0 ))
     WINDOW.blit(SCREEN,(200,0))
-    SCREEN.fill((129, 129, 129))
+    SCREEN.blit(game.bg,(0,0))
 
 
     for i in range(len(game.killedEnemies)):
@@ -345,9 +345,9 @@ def updateWindow():
     if not game.pause.isPaused:
         
         
-        for i in range(1,tile_quantity):
-            pygame.draw.line(SCREEN,(0,0,0),(0,i*50),(screenWidth,i*50))
-            pygame.draw.line(SCREEN,(0,0,0),(i*50,0),(i*50,screenHeight))
+        # for i in range(1,tile_quantity):
+        #     pygame.draw.line(SCREEN,(0,0,0),(0,i*50),(screenWidth,i*50))
+        #     pygame.draw.line(SCREEN,(0,0,0),(i*50,0),(i*50,screenHeight))
 
         for key in game.gameObjects:
             for objeto in game.gameObjects[key]:
