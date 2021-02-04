@@ -36,6 +36,10 @@ class Game:
             "gold":self.jugador.gold,
         }
         self.bg = pygame.image.load('images/bg.png')
+        self.heart = pygame.image.load('images/heart.png')
+        self.sword = pygame.image.load('images/attack.png')
+        self.shield = pygame.image.load('images/defense.png')
+        self.gold = pygame.image.load('images/gold.png')
 
     def crearNivel(self):
         nivel = self.niveles[self.nivel]

@@ -21,6 +21,8 @@ golpeSound = pygame.mixer.Sound('Sounds/golpe.mp3')
 deadEnemySound = pygame.mixer.Sound('Sounds/deadEnemy.mp3')
 
 
+
+
 game = Game()
 game.crearNivel()
 
@@ -364,10 +366,20 @@ def updateWindow():
         game.pause.draw(SCREEN)
 
 # Textos en el costado
-    goldText = font.render('Gold: ' + str(jugador.gold) , 1 , (255,255,255))
-    healthText = font.render('Hp: ' + str(jugador.health) , 1 , (255,255,255))
-    attackText = font.render('Att: ' + str(jugador.attack) , 1 , (255,255,255))
-    defenseText = font.render('Def: ' + str(jugador.defense) , 1 , (255,255,255))
+    goldText = font.render('        ' + str(jugador.gold) , 1 , (255,255,255))
+    healthText = font.render('       ' + str(jugador.health) , 1 , (255,255,255))
+    attackText = font.render('       ' + str(jugador.attack) , 1 , (255,255,255))
+    defenseText = font.render('      ' + str(jugador.defense) , 1 , (255,255,255))
+
+    WINDOW.blit(game.gold,(10,10))
+    WINDOW.blit(game.heart,(10,50))
+    WINDOW.blit(game.sword,(10,90))
+    WINDOW.blit(game.shield,(10,130))
+
+    # coso = pygame.transform.scale(game.heart,(17,17))
+    # WINDOW.blit(coso,(10,160))
+
+
     WINDOW.blit(goldText,(10,10))
     WINDOW.blit(healthText,(10,50))
     WINDOW.blit(attackText,(10,90))
