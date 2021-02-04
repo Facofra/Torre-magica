@@ -408,22 +408,28 @@ class Enemigo5(Enemigo):
 class Escalera:
     def __init__(self,x,y,direction):
         self.cords =Vector2(x,y)
-        self.offset=5
+        self.offset=0
         self.position = Vector2(self.cords.x * tile_size  + self.offset,self.cords.y * tile_size + self.offset)
         self.width= tile_size - self.offset*2
         self.height= tile_size - self.offset*2
         self.color =  ( 0, 203, 225 )
         self.direction=direction
+        self.sprites=[
+            pygame.image.load('images/stair0.png'),
+            pygame.image.load('images/stair1.png')
+        ]
     def draw(self,SCREEN):
         font = pygame.font.SysFont('papyrus',15,True)
         upText = font.render('up ', 1 , (255,255,255))
         downText = font.render('down ', 1 , (255,255,255))
         if self.direction == "up":
-            pygame.draw.rect(SCREEN,self.color, (self.position.x,self.position.y,self.width,self.height) )
-            SCREEN.blit(upText,(self.position.x, self.position.y))
+            # pygame.draw.rect(SCREEN,self.color, (self.position.x,self.position.y,self.width,self.height) )
+            # SCREEN.blit(upText,(self.position.x, self.position.y))
+            SCREEN.blit(self.sprites[1],(self.position.x, self.position.y))
         elif self.direction == "down":
-            pygame.draw.rect(SCREEN,(203,0,222), (self.position.x,self.position.y,self.width,self.height) )
-            SCREEN.blit(downText,(self.position.x, self.position.y))
+            # pygame.draw.rect(SCREEN,(203,0,222), (self.position.x,self.position.y,self.width,self.height) )
+            # SCREEN.blit(downText,(self.position.x, self.position.y))
+            SCREEN.blit(self.sprites[0],(self.position.x, self.position.y))
 
 class Tienda:
     def __init__(self,x,y):
