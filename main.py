@@ -78,11 +78,13 @@ def main():
                             if jugador.gold >= 10:
                                 if menu.arrowPosition ==0:
                                     jugador.health+=20
+                                    jugador.gold -= 10
                                 if menu.arrowPosition ==menu.textHeight *2:
                                     jugador.attack+=1
+                                    jugador.gold -= 10
                                 if menu.arrowPosition ==menu.textHeight *4:
                                     jugador.defense+=1
-                                jugador.gold -= 10
+                                    jugador.gold -= 10
                             if menu.arrowPosition ==menu.textHeight *6:
                                 menu.active=False
                                 menu.arrowPosition=0

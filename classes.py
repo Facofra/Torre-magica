@@ -478,35 +478,45 @@ class Menu:
         self.active=False
         self.textHeight=0
         self.textWidth=0
+        self.heart = pygame.image.load('images/heart.png')
+        self.sword = pygame.image.load('images/attack.png')
+        self.shield = pygame.image.load('images/defense.png')
+        self.gold = pygame.image.load('images/gold.png')
         
 
     def draw(self,SCREEN):
         # pygame.draw.rect(SCREEN,self.color, (self.position.x,self.position.y,self.width,self.height) )
         MENU = pygame.Surface([self.width,self.height])
         font = pygame.font.SysFont('papyrus',20,True)
-        hpText = font.render('+ Hp ', 1 , (255,255,255))
-        attText = font.render('+ Att ', 1 , (255,255,255))
-        defText = font.render('+ Def ', 1 , (255,255,255))
+        hpText = font.render('+20 ', 1 , (255,255,255))
+        attText = font.render('+1 ', 1 , (255,255,255))
+        defText = font.render('+1 ', 1 , (255,255,255))
         exitText = font.render('Exit ', 1 , (255,255,255))
-        costText = font.render('Cost: 10 Gold ', 1 , (255,255,255))
+        costText = font.render('Cost: 10  ', 1 , (255,255,255))
 
         textHeight= hpText.get_height()
         textWidth= hpText.get_width()
         self.textHeight=textHeight
         self.textWidth=textWidth
 
-        pygame.draw.polygon(MENU, (0,255,255), [
-            [textWidth+40,textHeight* 2+ 20+ self.arrowPosition],
-            [textWidth+30,textHeight* 2+ 25+ self.arrowPosition],
-            [textWidth+40,textHeight* 2+ 30+ self.arrowPosition]
-              ], 0)
-        
+    # iconos
+        MENU.blit(self.gold,(115,10))
+        MENU.blit(self.heart,(50,10 + textHeight *2))
+        MENU.blit(self.sword,(35,10 + textHeight * 4))
+        MENU.blit(self.shield,(35,10 + textHeight * 6))
+
+    # textos 
         MENU.blit(costText,(10,10))
         MENU.blit(hpText,(10,10 + textHeight *2))
         MENU.blit(attText,(10,10 + textHeight * 4))
         MENU.blit(defText,(10,10 + textHeight * 6))
-
         MENU.blit(exitText,(10, self.height - textHeight))
+
+        pygame.draw.polygon(MENU, (0,255,255), [
+            [textWidth+60,textHeight* 2+ 20+ self.arrowPosition],
+            [textWidth+50,textHeight* 2+ 25+ self.arrowPosition],
+            [textWidth+60,textHeight* 2+ 30+ self.arrowPosition]
+              ], 0)
         SCREEN.blit(MENU,(self.position.x, self.position.y))
 
 class Pause:
