@@ -47,7 +47,7 @@ def main():
                 run = False
 
             elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_RETURN:
+                if event.key == pygame.K_RETURN and not menu.active:
                     game.pause.isPaused = not game.pause.isPaused
 
 
@@ -342,8 +342,20 @@ def updateWindow():
             # damage = (enemy.attack - jugador.defense) * ( enemy.hp // (jugador.attack - enemy.defense) + enemy.hp % (jugador.attack - enemy.defense > 0)  )
             # damage = damage * (damage > 0)
             # statsText = littleFont.render( 'Dmg: '+str(damage) + '  G: ' + str(enemy.gold) , 1 , (255,255,255))
-            statsText = littleFont.render('Hp: ' + str(enemy.hp) + '  A: ' + str(enemy.attack) + '  D: ' + str(enemy.defense) + '  G: ' + str(enemy.gold) , 1 , (255,255,255))
+            statsText = littleFont.render('    ' + str(enemy.hp) + '       ' + str(enemy.attack) + '         ' + str(enemy.defense) + '        ' + str(enemy.gold) , 1 , (255,255,255))
             WINDOW.blit(statsText,(40,225 + i*42 ))
+
+            heart = pygame.transform.scale(game.heart,(17,17))
+            WINDOW.blit(heart,(35,225+ i*42))
+
+            sword = pygame.transform.scale(game.sword,(17,17))
+            WINDOW.blit(sword,(75,225+ i*42))
+
+            shield = pygame.transform.scale(game.shield,(17,17))
+            WINDOW.blit(shield,(115,225+ i*42))
+
+            gold = pygame.transform.scale(game.gold,(17,17))
+            WINDOW.blit(gold,(155,225+ i*42))
 
 
     if not game.pause.isPaused:
@@ -378,8 +390,7 @@ def updateWindow():
     WINDOW.blit(game.sword,(10,90))
     WINDOW.blit(game.shield,(10,130))
 
-    # coso = pygame.transform.scale(game.heart,(17,17))
-    # WINDOW.blit(coso,(10,160))
+    
 
 
     WINDOW.blit(goldText,(10,10))
